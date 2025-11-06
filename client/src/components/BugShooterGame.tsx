@@ -9,19 +9,13 @@ interface Bug {
   size: number;
   health: number;
   skill: string;
+  rotation: number;
 }
 
 interface Bullet {
   x: number;
   y: number;
-  vx: number;
   vy: number;
-}
-
-interface Player {
-  x: number;
-  y: number;
-  size: number;
 }
 
 const SKILLS = [
@@ -35,13 +29,14 @@ export default function BugShooterGame() {
   const [score, setScore] = useState(0);
   const [collectedSkills, setCollectedSkills] = useState<string[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
+  const [health, setHealth] = useState(100);
   
-  const playerRef = useRef<Player>({ x: 400, y: 300, size: 20 });
+  const playerXRef = useRef(300);
   const bugsRef = useRef<Bug[]>([]);
   const bulletsRef = useRef<Bullet[]>([]);
   const keysRef = useRef<Set<string>>(new Set());
-  const mouseRef = useRef({ x: 400, y: 300 });
   const animationFrameRef = useRef<number>();
+  const lastShotRef = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -62,16 +57,12 @@ export default function BugShooterGame() {
       keysRef.current.delete(e.key.toLowerCase());
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
-    };
-
     const handleClick = () => {
-      shoot();
+      if (!gameStarted) {
+        setGameStarted(true);
+      } else {
+        shoot();
+      }
     };
 
     const shoot = () => {
@@ -80,77 +71,132 @@ export default function BugShooterGame() {
         return;
       }
       
-      const player = playerRef.current;
-      const angle = Math.atan2(
-        mouseRef.current.y - player.y,
-        mouseRef.current.x - player.x
-      );
-      
+      const now = Date.now();
+      if (now - lastShotRef.current < 200) return;
+      lastShotRef.current = now;
+
       bulletsRef.current.push({
-        x: player.x,
-        y: player.y,
-        vx: Math.cos(angle) * 8,
-        vy: Math.sin(angle) * 8,
+        x: playerXRef.current,
+        y: 420,
+        vy: -10,
       });
     };
 
     const spawnBug = () => {
-      const side = Math.floor(Math.random() * 4);
-      let x = 0, y = 0;
-      
-      switch (side) {
-        case 0: x = Math.random() * 800; y = -20; break;
-        case 1: x = 820; y = Math.random() * 600; break;
-        case 2: x = Math.random() * 800; y = 620; break;
-        case 3: x = -20; y = Math.random() * 600; break;
-      }
-
-      const player = playerRef.current;
-      const angle = Math.atan2(player.y - y, player.x - x);
-      const speed = 1 + Math.random() * 1.5;
+      const x = Math.random() * 560 + 20;
 
       bugsRef.current.push({
         x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        size: 15 + Math.random() * 10,
-        health: 2,
+        y: -30,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: 0.8 + Math.random() * 1.2,
+        size: 20 + Math.random() * 15,
+        health: 1 + Math.floor(Math.random() * 2),
         skill: SKILLS[Math.floor(Math.random() * SKILLS.length)],
+        rotation: Math.random() * Math.PI * 2,
       });
+    };
+
+    const drawRobot = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, health: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      
+      const color = health > 1 ? "#ef4444" : "#f97316";
+      
+      ctx.fillStyle = color;
+      ctx.fillRect(-size * 0.4, -size * 0.3, size * 0.8, size * 0.6);
+      
+      ctx.fillStyle = "#1a1a1a";
+      ctx.fillRect(-size * 0.25, -size * 0.15, size * 0.15, size * 0.15);
+      ctx.fillRect(size * 0.1, -size * 0.15, size * 0.15, size * 0.15);
+      
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(-size * 0.3, size * 0.3);
+      ctx.lineTo(-size * 0.3, size * 0.5);
+      ctx.moveTo(size * 0.3, size * 0.3);
+      ctx.lineTo(size * 0.3, size * 0.5);
+      ctx.stroke();
+      
+      ctx.fillStyle = "#666";
+      ctx.beginPath();
+      ctx.arc(0, -size * 0.5, size * 0.15, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.restore();
+    };
+
+    const drawPlayer = (ctx: CanvasRenderingContext2D, x: number) => {
+      const y = 440;
+      const size = 25;
+      
+      ctx.fillStyle = "#3b82f6";
+      ctx.beginPath();
+      ctx.moveTo(x, y - size);
+      ctx.lineTo(x - size * 0.6, y + size * 0.3);
+      ctx.lineTo(x + size * 0.6, y + size * 0.3);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = "#60a5fa";
+      ctx.fillRect(x - 3, y - size * 0.5, 6, size * 0.8);
+      
+      ctx.strokeStyle = "#3b82f6";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(x - size * 0.4, y);
+      ctx.lineTo(x - size * 0.6, y + size * 0.5);
+      ctx.moveTo(x + size * 0.4, y);
+      ctx.lineTo(x + size * 0.6, y + size * 0.5);
+      ctx.stroke();
     };
 
     const gameLoop = () => {
       if (!ctx || !canvas) return;
 
-      ctx.fillStyle = "#0a0a0a";
-      ctx.fillRect(0, 0, 800, 600);
+      ctx.fillStyle = "#050505";
+      ctx.fillRect(0, 0, 600, 480);
+
+      ctx.strokeStyle = "#111";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 600; i += 30) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, 480);
+        ctx.stroke();
+      }
+      for (let i = 0; i < 480; i += 30) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(600, i);
+        ctx.stroke();
+      }
 
       if (!gameStarted) {
         ctx.fillStyle = "#ffffff";
-        ctx.font = "24px 'Space Mono', monospace";
+        ctx.font = "22px 'Space Mono', monospace";
         ctx.textAlign = "center";
-        ctx.fillText("Click or press SPACE to start", 400, 280);
-        ctx.font = "16px 'Space Mono', monospace";
+        ctx.fillText("SYSTEM DEFENDER", 300, 200);
+        ctx.font = "14px 'Space Mono', monospace";
         ctx.fillStyle = "#888888";
-        ctx.fillText("WASD to move • Mouse to aim • Click/Space to shoot", 400, 320);
+        ctx.fillText("Click or press SPACE to start", 300, 240);
+        ctx.fillText("A/D or ← → to move • Space/Click to shoot", 300, 270);
         animationFrameRef.current = requestAnimationFrame(gameLoop);
         return;
       }
 
-      const player = playerRef.current;
-      const speed = 4;
-
-      if (keysRef.current.has("w")) player.y = Math.max(player.size, player.y - speed);
-      if (keysRef.current.has("s")) player.y = Math.min(600 - player.size, player.y + speed);
-      if (keysRef.current.has("a")) player.x = Math.max(player.size, player.x - speed);
-      if (keysRef.current.has("d")) player.x = Math.min(800 - player.size, player.x + speed);
+      const speed = 5;
+      if (keysRef.current.has("a") || keysRef.current.has("arrowleft")) {
+        playerXRef.current = Math.max(30, playerXRef.current - speed);
+      }
+      if (keysRef.current.has("d") || keysRef.current.has("arrowright")) {
+        playerXRef.current = Math.min(570, playerXRef.current + speed);
+      }
 
       bulletsRef.current.forEach((bullet, i) => {
-        bullet.x += bullet.vx;
         bullet.y += bullet.vy;
-
-        if (bullet.x < 0 || bullet.x > 800 || bullet.y < 0 || bullet.y > 600) {
+        if (bullet.y < -10) {
           bulletsRef.current.splice(i, 1);
         }
       });
@@ -158,6 +204,21 @@ export default function BugShooterGame() {
       bugsRef.current.forEach((bug, i) => {
         bug.x += bug.vx;
         bug.y += bug.vy;
+        bug.rotation += 0.02;
+
+        if (bug.x < 20) {
+          bug.x = 20;
+          bug.vx *= -1;
+        }
+        if (bug.x > 580) {
+          bug.x = 580;
+          bug.vx *= -1;
+        }
+
+        if (bug.y > 480) {
+          bugsRef.current.splice(i, 1);
+          setHealth(h => Math.max(0, h - 10));
+        }
 
         bulletsRef.current.forEach((bullet, j) => {
           const dx = bug.x - bullet.x;
@@ -182,60 +243,40 @@ export default function BugShooterGame() {
         });
       });
 
-      if (Math.random() < 0.02 && bugsRef.current.length < 8) {
+      if (Math.random() < 0.015 && bugsRef.current.length < 6) {
         spawnBug();
       }
 
-      ctx.fillStyle = "#3b82f6";
-      ctx.beginPath();
-      ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
-      ctx.fill();
-
-      const angle = Math.atan2(mouseRef.current.y - player.y, mouseRef.current.x - player.x);
-      ctx.strokeStyle = "#3b82f6";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(player.x, player.y);
-      ctx.lineTo(
-        player.x + Math.cos(angle) * (player.size + 10),
-        player.y + Math.sin(angle) * (player.size + 10)
-      );
-      ctx.stroke();
+      drawPlayer(ctx, playerXRef.current);
 
       ctx.fillStyle = "#fbbf24";
+      ctx.shadowColor = "#fbbf24";
+      ctx.shadowBlur = 8;
       bulletsRef.current.forEach(bullet => {
-        ctx.beginPath();
-        ctx.arc(bullet.x, bullet.y, 3, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillRect(bullet.x - 2, bullet.y - 8, 4, 16);
       });
+      ctx.shadowBlur = 0;
 
       bugsRef.current.forEach(bug => {
-        ctx.fillStyle = bug.health > 1 ? "#ef4444" : "#f97316";
-        ctx.beginPath();
-        ctx.arc(bug.x, bug.y, bug.size, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = "#000000";
-        ctx.font = "12px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("🤖", bug.x, bug.y + 4);
+        drawRobot(ctx, bug.x, bug.y, bug.size, bug.health);
       });
 
-      ctx.strokeStyle = "#ffffff20";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(mouseRef.current.x - 10, mouseRef.current.y);
-      ctx.lineTo(mouseRef.current.x + 10, mouseRef.current.y);
-      ctx.moveTo(mouseRef.current.x, mouseRef.current.y - 10);
-      ctx.lineTo(mouseRef.current.x, mouseRef.current.y + 10);
-      ctx.stroke();
+      ctx.fillStyle = "#ffffff40";
+      ctx.font = "12px 'Space Mono', monospace";
+      ctx.textAlign = "left";
+      ctx.fillText(`SCORE: ${score}`, 10, 20);
+      
+      const healthColor = health > 60 ? "#10b981" : health > 30 ? "#f59e0b" : "#ef4444";
+      ctx.fillStyle = "#333";
+      ctx.fillRect(10, 30, 150, 8);
+      ctx.fillStyle = healthColor;
+      ctx.fillRect(10, 30, health * 1.5, 8);
 
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
-    canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("click", handleClick);
 
     gameLoop();
@@ -243,7 +284,6 @@ export default function BugShooterGame() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
-      canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("click", handleClick);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -252,30 +292,25 @@ export default function BugShooterGame() {
   }, [gameStarted]);
 
   return (
-    <div className="flex flex-col items-center gap-6 p-8">
-      <div className="w-full max-w-3xl">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Bug Hunter</h2>
-          <div className="font-mono text-lg" data-testid="text-score">
-            Score: <span className="text-primary">{score}</span>
-          </div>
-        </div>
-        
-        <div className="border-2 border-border rounded-md overflow-hidden bg-black">
+    <div className="flex flex-col items-center gap-4 p-6">
+      <div className="w-full max-w-2xl">
+        <div className="border border-border rounded-md overflow-hidden" style={{ backgroundColor: '#050505' }}>
           <canvas
             ref={canvasRef}
-            width={800}
-            height={600}
+            width={600}
+            height={480}
             className="w-full h-auto cursor-crosshair"
             data-testid="canvas-game"
           />
         </div>
 
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-3">Collected Skills</h3>
+        <div className="mt-4">
+          <h3 className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
+            System Skills Unlocked
+          </h3>
           {collectedSkills.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Shoot the robot bugs to collect skill badges!
+            <p className="text-xs text-muted-foreground">
+              Defend the system by eliminating bugs to unlock skills...
             </p>
           ) : (
             <div className="flex flex-wrap gap-2">
@@ -283,7 +318,7 @@ export default function BugShooterGame() {
                 <Badge
                   key={skill}
                   variant="secondary"
-                  className="px-3 py-1"
+                  className="px-2 py-0.5 text-xs"
                   data-testid={`badge-skill-${skill.toLowerCase().replace(/\./g, '')}`}
                 >
                   {skill}

@@ -4,37 +4,37 @@ import { Link } from "wouter";
 
 export default function PersonalInfo() {
   return (
-    <div className="flex flex-col gap-6 p-8">
-      <div className="space-y-4">
+    <div className="flex flex-col gap-8 p-8">
+      <div className="space-y-6">
         <div>
-          <h1 className="text-5xl font-bold mb-2" data-testid="text-name">
+          <h1 className="text-5xl font-bold mb-3 leading-tight" data-testid="text-name">
             Hello!<br />I'm Alex
           </h1>
-          <p className="text-base text-muted-foreground leading-relaxed max-w-prose" data-testid="text-intro">
+          <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-intro">
             Full-stack developer with 5+ years of experience building modern web applications. 
             Passionate about clean code, interactive experiences, and hunting down bugs in the system.
           </p>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <span className="px-3 py-1 text-sm bg-accent rounded-md" data-testid="badge-age">
+          <span className="px-3 py-1.5 text-xs bg-accent rounded-md font-medium" data-testid="badge-age">
             28 y.o.
           </span>
-          <span className="px-3 py-1 text-sm bg-accent rounded-md" data-testid="badge-stack">
+          <span className="px-3 py-1.5 text-xs bg-accent rounded-md font-medium" data-testid="badge-stack">
             Full-Stack
           </span>
-          <span className="px-3 py-1 text-sm bg-accent rounded-md" data-testid="badge-specialty">
+          <span className="px-3 py-1.5 text-xs bg-accent rounded-md font-medium" data-testid="badge-specialty">
             React/Node
           </span>
         </div>
       </div>
 
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm" data-testid="location-info">
-          <MapPin className="w-4 h-4 text-muted-foreground" />
+        <div className="flex items-start gap-3 text-sm p-4 bg-card rounded-md border border-card-border" data-testid="location-info">
+          <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
           <div>
             <div className="font-medium">San Francisco, CA</div>
-            <div className="text-muted-foreground font-mono text-xs">
+            <div className="text-muted-foreground font-mono text-xs mt-1">
               {new Date().toLocaleTimeString('en-US', { 
                 hour: '2-digit', 
                 minute: '2-digit',
@@ -45,9 +45,9 @@ export default function PersonalInfo() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 pt-4">
+      <div className="flex flex-col gap-3 pt-2">
         <Button 
-          className="w-full h-12 text-base"
+          className="w-full h-12 text-sm"
           asChild
           data-testid="button-contact"
         >
@@ -59,7 +59,7 @@ export default function PersonalInfo() {
         
         <Button 
           variant="outline" 
-          className="w-full h-12 text-base"
+          className="w-full h-12 text-sm"
           asChild
           data-testid="button-cv"
         >
