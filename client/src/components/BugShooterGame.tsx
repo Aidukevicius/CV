@@ -31,7 +31,7 @@ export default function BugShooterGame() {
   const [gameStarted, setGameStarted] = useState(false);
   const [health, setHealth] = useState(100);
   
-  const playerXRef = useRef(300);
+  const playerXRef = useRef(250);
   const bugsRef = useRef<Bug[]>([]);
   const bulletsRef = useRef<Bullet[]>([]);
   const keysRef = useRef<Set<string>>(new Set());
@@ -77,20 +77,20 @@ export default function BugShooterGame() {
 
       bulletsRef.current.push({
         x: playerXRef.current,
-        y: 420,
+        y: 340,
         vy: -10,
       });
     };
 
     const spawnBug = () => {
-      const x = Math.random() * 560 + 20;
+      const x = Math.random() * 460 + 20;
 
       bugsRef.current.push({
         x,
         y: -30,
         vx: (Math.random() - 0.5) * 1.5,
         vy: 0.8 + Math.random() * 1.2,
-        size: 20 + Math.random() * 15,
+        size: 18 + Math.random() * 12,
         health: 1 + Math.floor(Math.random() * 2),
         skill: SKILLS[Math.floor(Math.random() * SKILLS.length)],
         rotation: Math.random() * Math.PI * 2,
@@ -106,30 +106,30 @@ export default function BugShooterGame() {
       ctx.fillStyle = color;
       ctx.fillRect(-size * 0.4, -size * 0.3, size * 0.8, size * 0.6);
       
-      ctx.fillStyle = "#1a1a1a";
+      ctx.fillStyle = "#000";
       ctx.fillRect(-size * 0.25, -size * 0.15, size * 0.15, size * 0.15);
       ctx.fillRect(size * 0.1, -size * 0.15, size * 0.15, size * 0.15);
       
       ctx.strokeStyle = color;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(-size * 0.3, size * 0.3);
-      ctx.lineTo(-size * 0.3, size * 0.5);
+      ctx.lineTo(-size * 0.3, size * 0.45);
       ctx.moveTo(size * 0.3, size * 0.3);
-      ctx.lineTo(size * 0.3, size * 0.5);
+      ctx.lineTo(size * 0.3, size * 0.45);
       ctx.stroke();
       
-      ctx.fillStyle = "#666";
+      ctx.fillStyle = "#555";
       ctx.beginPath();
-      ctx.arc(0, -size * 0.5, size * 0.15, 0, Math.PI * 2);
+      ctx.arc(0, -size * 0.5, size * 0.12, 0, Math.PI * 2);
       ctx.fill();
       
       ctx.restore();
     };
 
     const drawPlayer = (ctx: CanvasRenderingContext2D, x: number) => {
-      const y = 440;
-      const size = 25;
+      const y = 360;
+      const size = 22;
       
       ctx.fillStyle = "#3b82f6";
       ctx.beginPath();
@@ -140,58 +140,58 @@ export default function BugShooterGame() {
       ctx.fill();
       
       ctx.fillStyle = "#60a5fa";
-      ctx.fillRect(x - 3, y - size * 0.5, 6, size * 0.8);
+      ctx.fillRect(x - 3, y - size * 0.5, 6, size * 0.7);
       
       ctx.strokeStyle = "#3b82f6";
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.moveTo(x - size * 0.4, y);
-      ctx.lineTo(x - size * 0.6, y + size * 0.5);
+      ctx.lineTo(x - size * 0.6, y + size * 0.4);
       ctx.moveTo(x + size * 0.4, y);
-      ctx.lineTo(x + size * 0.6, y + size * 0.5);
+      ctx.lineTo(x + size * 0.6, y + size * 0.4);
       ctx.stroke();
     };
 
     const gameLoop = () => {
       if (!ctx || !canvas) return;
 
-      ctx.fillStyle = "#050505";
-      ctx.fillRect(0, 0, 600, 480);
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, 500, 380);
 
-      ctx.strokeStyle = "#111";
+      ctx.strokeStyle = "#0a0a0a";
       ctx.lineWidth = 1;
-      for (let i = 0; i < 600; i += 30) {
+      for (let i = 0; i < 500; i += 25) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
-        ctx.lineTo(i, 480);
+        ctx.lineTo(i, 380);
         ctx.stroke();
       }
-      for (let i = 0; i < 480; i += 30) {
+      for (let i = 0; i < 380; i += 25) {
         ctx.beginPath();
         ctx.moveTo(0, i);
-        ctx.lineTo(600, i);
+        ctx.lineTo(500, i);
         ctx.stroke();
       }
 
       if (!gameStarted) {
         ctx.fillStyle = "#ffffff";
-        ctx.font = "22px 'Space Mono', monospace";
+        ctx.font = "20px 'Space Mono', monospace";
         ctx.textAlign = "center";
-        ctx.fillText("SYSTEM DEFENDER", 300, 200);
-        ctx.font = "14px 'Space Mono', monospace";
+        ctx.fillText("SYSTEM DEFENDER", 250, 160);
+        ctx.font = "12px 'Space Mono', monospace";
         ctx.fillStyle = "#888888";
-        ctx.fillText("Click or press SPACE to start", 300, 240);
-        ctx.fillText("A/D or ← → to move • Space/Click to shoot", 300, 270);
+        ctx.fillText("Click or SPACE to start", 250, 190);
+        ctx.fillText("A/D or ← → to move • Space/Click to shoot", 250, 210);
         animationFrameRef.current = requestAnimationFrame(gameLoop);
         return;
       }
 
       const speed = 5;
       if (keysRef.current.has("a") || keysRef.current.has("arrowleft")) {
-        playerXRef.current = Math.max(30, playerXRef.current - speed);
+        playerXRef.current = Math.max(25, playerXRef.current - speed);
       }
       if (keysRef.current.has("d") || keysRef.current.has("arrowright")) {
-        playerXRef.current = Math.min(570, playerXRef.current + speed);
+        playerXRef.current = Math.min(475, playerXRef.current + speed);
       }
 
       bulletsRef.current.forEach((bullet, i) => {
@@ -210,12 +210,12 @@ export default function BugShooterGame() {
           bug.x = 20;
           bug.vx *= -1;
         }
-        if (bug.x > 580) {
-          bug.x = 580;
+        if (bug.x > 480) {
+          bug.x = 480;
           bug.vx *= -1;
         }
 
-        if (bug.y > 480) {
+        if (bug.y > 380) {
           bugsRef.current.splice(i, 1);
           setHealth(h => Math.max(0, h - 10));
         }
@@ -251,9 +251,9 @@ export default function BugShooterGame() {
 
       ctx.fillStyle = "#fbbf24";
       ctx.shadowColor = "#fbbf24";
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 6;
       bulletsRef.current.forEach(bullet => {
-        ctx.fillRect(bullet.x - 2, bullet.y - 8, 4, 16);
+        ctx.fillRect(bullet.x - 2, bullet.y - 6, 4, 12);
       });
       ctx.shadowBlur = 0;
 
@@ -261,16 +261,16 @@ export default function BugShooterGame() {
         drawRobot(ctx, bug.x, bug.y, bug.size, bug.health);
       });
 
-      ctx.fillStyle = "#ffffff40";
-      ctx.font = "12px 'Space Mono', monospace";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "11px 'Space Mono', monospace";
       ctx.textAlign = "left";
-      ctx.fillText(`SCORE: ${score}`, 10, 20);
+      ctx.fillText(`SCORE: ${score}`, 8, 16);
       
       const healthColor = health > 60 ? "#10b981" : health > 30 ? "#f59e0b" : "#ef4444";
-      ctx.fillStyle = "#333";
-      ctx.fillRect(10, 30, 150, 8);
+      ctx.fillStyle = "#1a1a1a";
+      ctx.fillRect(8, 22, 120, 6);
       ctx.fillStyle = healthColor;
-      ctx.fillRect(10, 30, health * 1.5, 8);
+      ctx.fillRect(8, 22, health * 1.2, 6);
 
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
@@ -293,27 +293,27 @@ export default function BugShooterGame() {
 
   return (
     <div className="flex flex-col items-center gap-4 p-6">
-      <div className="w-full max-w-2xl">
-        <div className="border border-border rounded-md overflow-hidden" style={{ backgroundColor: '#050505' }}>
+      <div className="w-full">
+        <div className="border border-border rounded-md overflow-hidden" style={{ backgroundColor: '#000' }}>
           <canvas
             ref={canvasRef}
-            width={600}
-            height={480}
+            width={500}
+            height={380}
             className="w-full h-auto cursor-crosshair"
             data-testid="canvas-game"
           />
         </div>
 
         <div className="mt-4">
-          <h3 className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
-            System Skills Unlocked
+          <h3 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
+            Skills Unlocked
           </h3>
           {collectedSkills.length === 0 ? (
             <p className="text-xs text-muted-foreground">
-              Defend the system by eliminating bugs to unlock skills...
+              Eliminate bugs to unlock skills...
             </p>
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {collectedSkills.map((skill) => (
                 <Badge
                   key={skill}

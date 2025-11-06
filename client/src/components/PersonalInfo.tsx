@@ -1,18 +1,25 @@
-import { MapPin, Mail, FileText } from "lucide-react";
+import { Mail, FileText, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import LocationMap from "./LocationMap";
 
 export default function PersonalInfo() {
   return (
-    <div className="flex flex-col gap-8 p-8">
-      <div className="space-y-6">
+    <div className="flex flex-col gap-6 p-8">
+      <div className="flex items-center justify-center">
+        <div className="w-24 h-24 rounded-full bg-accent border-2 border-border flex items-center justify-center">
+          <User className="w-12 h-12 text-muted-foreground" />
+        </div>
+      </div>
+
+      <div className="space-y-4">
         <div>
-          <h1 className="text-5xl font-bold mb-3 leading-tight" data-testid="text-name">
+          <h1 className="text-4xl font-bold mb-2 leading-tight" data-testid="text-name">
             Hello!<br />I'm Alex
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-intro">
             Full-stack developer with 5+ years of experience building modern web applications. 
-            Passionate about clean code, interactive experiences, and hunting down bugs in the system.
+            Passionate about clean code and hunting bugs.
           </p>
         </div>
 
@@ -29,25 +36,11 @@ export default function PersonalInfo() {
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="flex items-start gap-3 text-sm p-4 bg-card rounded-md border border-card-border" data-testid="location-info">
-          <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-          <div>
-            <div className="font-medium">San Francisco, CA</div>
-            <div className="text-muted-foreground font-mono text-xs mt-1">
-              {new Date().toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                hour12: false 
-              })} PST · Local time
-            </div>
-          </div>
-        </div>
-      </div>
+      <LocationMap city="San Francisco, CA" timezone="PST" />
 
-      <div className="flex flex-col gap-3 pt-2">
+      <div className="flex flex-col gap-3">
         <Button 
-          className="w-full h-12 text-sm"
+          className="w-full h-11 text-sm"
           asChild
           data-testid="button-contact"
         >
@@ -59,7 +52,7 @@ export default function PersonalInfo() {
         
         <Button 
           variant="outline" 
-          className="w-full h-12 text-sm"
+          className="w-full h-11 text-sm"
           asChild
           data-testid="button-cv"
         >
