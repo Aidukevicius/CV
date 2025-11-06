@@ -77,7 +77,7 @@ export default function BugShooterGame() {
 
       bulletsRef.current.push({
         x: playerXRef.current,
-        y: 340,
+        y: 540,
         vy: -10,
       });
     };
@@ -128,7 +128,7 @@ export default function BugShooterGame() {
     };
 
     const drawPlayer = (ctx: CanvasRenderingContext2D, x: number) => {
-      const y = 360;
+      const y = 560;
       const size = 22;
       
       ctx.fillStyle = "#3b82f6";
@@ -156,17 +156,17 @@ export default function BugShooterGame() {
       if (!ctx || !canvas) return;
 
       ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, 500, 380);
+      ctx.fillRect(0, 0, 500, 580);
 
       ctx.strokeStyle = "#0a0a0a";
       ctx.lineWidth = 1;
       for (let i = 0; i < 500; i += 25) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
-        ctx.lineTo(i, 380);
+        ctx.lineTo(i, 580);
         ctx.stroke();
       }
-      for (let i = 0; i < 380; i += 25) {
+      for (let i = 0; i < 580; i += 25) {
         ctx.beginPath();
         ctx.moveTo(0, i);
         ctx.lineTo(500, i);
@@ -177,11 +177,11 @@ export default function BugShooterGame() {
         ctx.fillStyle = "#ffffff";
         ctx.font = "20px 'Space Mono', monospace";
         ctx.textAlign = "center";
-        ctx.fillText("SYSTEM DEFENDER", 250, 160);
+        ctx.fillText("SYSTEM DEFENDER", 250, 260);
         ctx.font = "12px 'Space Mono', monospace";
         ctx.fillStyle = "#888888";
-        ctx.fillText("Click or SPACE to start", 250, 190);
-        ctx.fillText("A/D or ← → to move • Space/Click to shoot", 250, 210);
+        ctx.fillText("Click or SPACE to start", 250, 290);
+        ctx.fillText("A/D or ← → to move • Space/Click to shoot", 250, 310);
         animationFrameRef.current = requestAnimationFrame(gameLoop);
         return;
       }
@@ -215,7 +215,7 @@ export default function BugShooterGame() {
           bug.vx *= -1;
         }
 
-        if (bug.y > 380) {
+        if (bug.y > 580) {
           bugsRef.current.splice(i, 1);
           setHealth(h => Math.max(0, h - 10));
         }
@@ -298,7 +298,7 @@ export default function BugShooterGame() {
           <canvas
             ref={canvasRef}
             width={500}
-            height={380}
+            height={580}
             className="w-full h-auto cursor-crosshair"
             data-testid="canvas-game"
           />

@@ -22,31 +22,58 @@ export default function LocationMap({ city, timezone }: LocationMapProps) {
       ctx.fillStyle = "#0a0a0a";
       ctx.fillRect(0, 0, 200, 80);
 
-      ctx.strokeStyle = "#222";
-      ctx.lineWidth = 1.5;
-
-      for (let i = 0; i < 15; i++) {
+      ctx.strokeStyle = "#1a1a1a";
+      ctx.lineWidth = 2;
+      
+      for (let x = 0; x <= 200; x += 20) {
         ctx.beginPath();
-        const x1 = Math.random() * 200;
-        const y1 = Math.random() * 80;
-        const x2 = x1 + (Math.random() - 0.5) * 40;
-        const y2 = y1 + (Math.random() - 0.5) * 40;
-        const x3 = x2 + (Math.random() - 0.5) * 40;
-        const y3 = y2 + (Math.random() - 0.5) * 40;
-        
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x3, y3);
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 80);
         ctx.stroke();
       }
+      
+      for (let y = 0; y <= 80; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(200, y);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = "#252525";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(10, 20);
+      ctx.lineTo(60, 20);
+      ctx.lineTo(60, 50);
+      ctx.lineTo(100, 50);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(100, 30);
+      ctx.lineTo(150, 30);
+      ctx.lineTo(150, 60);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(40, 40);
+      ctx.lineTo(40, 70);
+      ctx.lineTo(120, 70);
+      ctx.stroke();
 
       const markerX = 140;
       const markerY = 35;
 
       const pulseSize = 3 + Math.sin(frame * 0.1) * 2;
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.sin(frame * 0.1) * 0.2})`;
+      const pulseOpacity = 0.3 + Math.sin(frame * 0.1) * 0.2;
+      
+      ctx.fillStyle = `rgba(255, 255, 255, ${pulseOpacity * 0.5})`;
       ctx.beginPath();
-      ctx.arc(markerX, markerY, pulseSize * 3, 0, Math.PI * 2);
+      ctx.arc(markerX, markerY, pulseSize * 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = `rgba(255, 255, 255, ${pulseOpacity})`;
+      ctx.beginPath();
+      ctx.arc(markerX, markerY, pulseSize * 2.5, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = "#ffffff";
@@ -55,9 +82,9 @@ export default function LocationMap({ city, timezone }: LocationMapProps) {
       ctx.fill();
 
       ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.arc(markerX, markerY, 8, 0, Math.PI * 2);
+      ctx.arc(markerX, markerY, 9, 0, Math.PI * 2);
       ctx.stroke();
 
       frame++;

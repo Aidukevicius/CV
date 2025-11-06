@@ -17,6 +17,10 @@ const SOCIAL_LINKS = [
 ];
 
 export default function ProjectsGrid() {
+  const hexWidth = 98;
+  const hexHeight = 111;
+  const radius = 115;
+
   return (
     <div className="flex flex-col gap-8 p-8">
       <div>
@@ -24,55 +28,46 @@ export default function ProjectsGrid() {
           Latest Projects
         </h2>
         
-        <div className="flex flex-col items-center">
-          <div className="flex justify-center mb-[-28px]">
-            <HoneycombButton
-              title={PROJECTS[0].title}
-              description={PROJECTS[0].description}
-              color={PROJECTS[0].color}
-            />
-          </div>
+        <div className="flex justify-center items-center" style={{ minHeight: '320px' }}>
+          <div className="relative" style={{ width: `${radius * 2 + hexWidth}px`, height: `${radius * 2 + hexHeight}px` }}>
+            <div 
+              className="absolute"
+              style={{
+                left: `${radius}px`,
+                top: `${radius}px`,
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
+              <HoneycombButton
+                title="Portfolio"
+                description="This website"
+                color="rgba(168, 85, 247, 0.7)"
+              />
+            </div>
 
-          <div className="flex justify-center gap-1 mb-[-28px]">
-            <HoneycombButton
-              title={PROJECTS[1].title}
-              description={PROJECTS[1].description}
-              color={PROJECTS[1].color}
-            />
-            <HoneycombButton
-              title={PROJECTS[2].title}
-              description={PROJECTS[2].description}
-              color={PROJECTS[2].color}
-            />
-          </div>
+            {PROJECTS.map((project, idx) => {
+              const angle = (idx * 60 - 90) * (Math.PI / 180);
+              const x = radius + Math.cos(angle) * radius;
+              const y = radius + Math.sin(angle) * radius;
 
-          <div className="flex justify-center mb-[-28px]" style={{ marginLeft: '50px' }}>
-            <HoneycombButton
-              title="Portfolio"
-              description="This website"
-              color="rgba(168, 85, 247, 0.7)"
-            />
-          </div>
-
-          <div className="flex justify-center gap-1 mb-[-28px]">
-            <HoneycombButton
-              title={PROJECTS[3].title}
-              description={PROJECTS[3].description}
-              color={PROJECTS[3].color}
-            />
-            <HoneycombButton
-              title={PROJECTS[4].title}
-              description={PROJECTS[4].description}
-              color={PROJECTS[4].color}
-            />
-          </div>
-
-          <div className="flex justify-center">
-            <HoneycombButton
-              title={PROJECTS[5].title}
-              description={PROJECTS[5].description}
-              color={PROJECTS[5].color}
-            />
+              return (
+                <div
+                  key={project.title}
+                  className="absolute"
+                  style={{
+                    left: `${x}px`,
+                    top: `${y}px`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <HoneycombButton
+                    title={project.title}
+                    description={project.description}
+                    color={project.color}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
