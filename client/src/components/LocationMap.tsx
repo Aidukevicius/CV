@@ -1,121 +1,26 @@
-import { useEffect, useRef } from "react";
-
 interface LocationMapProps {
   city: string;
   timezone: string;
 }
 
 export default function LocationMap({ city, timezone }: LocationMapProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let frame = 0;
-    let animationId: number;
-
-    const drawMap = () => {
-      const gradient = ctx.createLinearGradient(0, 0, 200, 80);
-      gradient.addColorStop(0, "#0a0a0a");
-      gradient.addColorStop(1, "#0f0f0f");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 200, 80);
-
-      ctx.strokeStyle = "#1a1a1a";
-      ctx.lineWidth = 2;
-      
-      for (let x = 0; x <= 200; x += 20) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, 80);
-        ctx.stroke();
-      }
-      
-      for (let y = 0; y <= 80; y += 20) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(200, y);
-        ctx.stroke();
-      }
-
-      ctx.strokeStyle = "#252525";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(10, 20);
-      ctx.lineTo(60, 20);
-      ctx.lineTo(60, 50);
-      ctx.lineTo(100, 50);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(100, 30);
-      ctx.lineTo(150, 30);
-      ctx.lineTo(150, 60);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(40, 40);
-      ctx.lineTo(40, 70);
-      ctx.lineTo(120, 70);
-      ctx.stroke();
-
-      const markerX = 140;
-      const markerY = 35;
-
-      const pulseSize = 3 + Math.sin(frame * 0.1) * 2;
-      const pulseOpacity = 0.3 + Math.sin(frame * 0.1) * 0.2;
-      
-      const pulseGradient = ctx.createRadialGradient(markerX, markerY, 0, markerX, markerY, pulseSize * 4);
-      pulseGradient.addColorStop(0, `rgba(168, 85, 247, ${pulseOpacity})`);
-      pulseGradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
-      ctx.fillStyle = pulseGradient;
-      ctx.beginPath();
-      ctx.arc(markerX, markerY, pulseSize * 4, 0, Math.PI * 2);
-      ctx.fill();
-
-      const innerGradient = ctx.createRadialGradient(markerX, markerY, 0, markerX, markerY, pulseSize);
-      innerGradient.addColorStop(0, '#ffffff');
-      innerGradient.addColorStop(1, '#a855f7');
-      ctx.fillStyle = innerGradient;
-      ctx.beginPath();
-      ctx.arc(markerX, markerY, pulseSize, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(markerX, markerY, 9, 0, Math.PI * 2);
-      ctx.stroke();
-
-      frame++;
-      animationId = requestAnimationFrame(drawMap);
-    };
-
-    drawMap();
-
-    return () => {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-      }
-    };
-  }, []);
-
   return (
     <div className="relative p-4 bg-card rounded-md border border-card-border overflow-hidden hover-elevate transition-all group">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-      <canvas
-        ref={canvasRef}
-        width={200}
-        height={80}
-        className="w-full h-auto rounded relative z-10"
-      />
-      <div className="absolute bottom-2 left-4 text-sm z-10">
-        <div className="font-medium text-foreground">{city}</div>
-        <div className="text-muted-foreground font-mono text-xs">
+      <div className="relative rounded overflow-hidden" style={{ height: '80px' }}>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover rounded"
+        >
+          <source src="/Sibiu.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div className="absolute bottom-2 left-4 text-sm z-10 bg-black/50 px-2 py-1 rounded">
+        <div className="font-medium text-white">{city}</div>
+        <div className="text-white/80 font-mono text-xs">
           {new Date().toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit',
