@@ -14,15 +14,15 @@ export default function Home() {
       <div className="min-h-screen w-full bg-background relative">
         {/* Desktop Layout */}
         <div className="hidden lg:grid lg:grid-cols-12 lg:h-screen">
-          <div className="col-span-4 border-r overflow-y-auto" style={{ borderColor: "hsl(120 20% 30%)" }}>
+          <div className="col-span-4 overflow-y-auto" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <PersonalInfo />
           </div>
           
-          <div className="col-span-4 overflow-y-auto">
+          <div className="col-span-4 overflow-y-auto" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
             <BugShooterGame />
           </div>
           
-          <div className="col-span-4 border-l overflow-y-auto" style={{ borderColor: "hsl(120 20% 30%)" }}>
+          <div className="col-span-4 overflow-y-auto" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <ProjectsGrid />
           </div>
         </div>
@@ -30,11 +30,11 @@ export default function Home() {
         {/* Mobile/Tablet Layout */}
         <div className="lg:hidden min-h-screen overflow-y-auto">
           <div className="flex flex-col">
-            <div className="flex-shrink-0 border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10" style={{ borderColor: "hsl(120 20% 30%)" }}>
+            <div className="flex-shrink-0 bg-card/50 backdrop-blur-sm sticky top-0 z-10" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <PersonalInfo />
             </div>
 
-            <div className="relative bg-background min-h-[60vh]">
+            <div className="relative min-h-[60vh]" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -42,7 +42,6 @@ export default function Home() {
                   onClick={() => setGameFullscreen(true)}
                   className="bg-background/80 backdrop-blur-sm"
                   data-testid="button-fullscreen"
-                  style={{ borderColor: "hsl(120 20% 30%)" }}
                 >
                   <Maximize2 className="w-5 h-5" />
                 </Button>
@@ -50,7 +49,7 @@ export default function Home() {
               <BugShooterGame />
             </div>
 
-            <div className="border-t min-h-screen" style={{ borderColor: "hsl(120 20% 30%)" }}>
+            <div className="min-h-screen" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <ProjectsGrid />
             </div>
           </div>

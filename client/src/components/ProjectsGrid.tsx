@@ -86,62 +86,28 @@ export default function ProjectsGrid() {
           <div className="h-px bg-gradient-to-r from-border to-transparent" />
         </div>
 
-        <div className="flex-1 flex items-center justify-center min-h-[500px] py-8 px-4">
-          <div className="relative flex items-center justify-center" style={{ width: '100%', maxWidth: '600px', height: '500px' }}>
-            <div className="relative" style={{ width: '400px', height: '400px' }}>
-              {/* Center hex */}
+        <div className="flex-1 py-8">
+          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto px-4">
+            {PROJECTS.map((project, idx) => (
               <div
-              className="absolute"
-              style={{
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                animation: 'fadeIn 0.6s ease-out 0s both'
-              }}
-            >
-              <HoneycombButton
-                title={PROJECTS[0].title}
-                description={PROJECTS[0].description}
-                color={PROJECTS[0].color}
-                imageUrl={PROJECTS[0].imageUrl}
-              />
-            </div>
-            
-            {/* 6 hexes around center */}
-            {PROJECTS.slice(1).map((project, idx) => {
-              // Position hexagons in a circle around the center
-              // For flat-top hexagons: radius should be approximately the width of a hex
-              // to make them touch properly
-              const angle = (Math.PI / 3) * idx; // Start at 0 degrees (right side)
-              const radius = 145; // Distance from center (adjusted for hexagon size)
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius;
-              
-              return (
-                <div
-                  key={project.title}
-                  className="absolute"
-                  style={{
-                    left: `calc(50% + ${x}px)`,
-                    top: `calc(50% + ${y}px)`,
-                    transform: 'translate(-50%, -50%)',
-                    animation: `fadeIn 0.6s ease-out ${(idx + 1) * 0.1}s both`
-                  }}
-                >
-                  <HoneycombButton
-                    title={project.title}
-                    description={project.description}
-                    color={project.color}
-                    imageUrl={project.imageUrl}
-                  />
-                </div>
-              );
-            })}
-            </div>
+                key={project.title}
+                className="flex justify-center"
+                style={{
+                  animation: `fadeIn 0.6s ease-out ${idx * 0.1}s both`
+                }}
+              >
+                <HoneycombButton
+                  title={project.title}
+                  description={project.description}
+                  color={project.color}
+                  imageUrl={project.imageUrl}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="pt-6 border-t relative z-10 mt-auto" style={{ borderColor: "hsl(120 20% 30%)" }}>
+        <div className="pt-6 relative z-10 mt-auto">
           <div className="flex items-center gap-4 mb-4">
             <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(120 20% 50%)" }}>
               Connect
