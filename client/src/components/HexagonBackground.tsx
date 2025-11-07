@@ -34,7 +34,7 @@ export default function HexagonBackground() {
   return (
     <svg 
       className="absolute inset-0 w-full h-full pointer-events-none" 
-      style={{ overflow: 'visible', opacity: 0.3 }}
+      style={{ overflow: 'visible', opacity: 0.15 }}
     >
       <g transform="translate(200, 200)">
         {hexPositions.map((pos, idx) => (
@@ -43,8 +43,8 @@ export default function HexagonBackground() {
             d={createHexagonPath(50)}
             transform={`translate(${pos.x}, ${pos.y})`}
             fill="none"
-            stroke="hsl(120 20% 30%)"
-            strokeWidth="1.5"
+            stroke="hsl(120 20% 25%)"
+            strokeWidth="1"
           />
         ))}
       </g>

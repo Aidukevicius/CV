@@ -22,8 +22,8 @@ export default function HoneycombButton({
 }: HoneycombButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   
-  const baseScale = size === "sm" ? 0.7 : 1.15;
-  const scale = isHovered && imageUrl ? baseScale * 2 : baseScale;
+  const baseScale = size === "sm" ? 0.7 : 1.3;
+  const scale = isHovered && imageUrl ? baseScale * 1.8 : baseScale;
   const width = 98 * scale;
   const height = 111 * scale;
   
@@ -64,27 +64,29 @@ export default function HoneycombButton({
           )}
         </defs>
         
-        {imageUrl && isHovered ? (
-          <image
-            href={imageUrl}
-            x="0"
-            y="0"
-            width="98"
-            height="111"
-            preserveAspectRatio="xMidYMid slice"
-            clipPath={`url(#hexClip-${title || Math.random()})`}
-            opacity="0.7"
+        <g>
+          {imageUrl && isHovered ? (
+            <image
+              href={imageUrl}
+              x="0"
+              y="0"
+              width="98"
+              height="111"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath={`url(#hexClip-${title || Math.random()})`}
+              opacity="0.6"
+            />
+          ) : null}
+          
+          <path
+            d={svgPath}
+            fill={imageUrl && isHovered ? "rgba(0, 0, 0, 0.7)" : color}
+            stroke="hsl(120 20% 45%)"
+            strokeWidth="1.5"
+            className="transition-all duration-500"
+            style={{ filter: isHovered ? `url(#glow-${title || Math.random()})` : 'none' }}
           />
-        ) : null}
-        
-        <path
-          d={svgPath}
-          fill={imageUrl && isHovered ? "rgba(0, 0, 0, 0.6)" : color}
-          stroke="hsl(120 20% 45%)"
-          strokeWidth="1.5"
-          className="transition-all duration-500"
-          style={{ filter: isHovered ? `url(#glow-${title || Math.random()})` : 'none' }}
-        />
+        </g>
       </svg>
       
       <div 
