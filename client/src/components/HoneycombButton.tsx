@@ -25,6 +25,8 @@ export default function HoneycombButton({
   
   const svgPath = "M 47.384 1.64 C 48.385 1.067 49.615 1.067 50.616 1.64 L 95.183 27.17 C 96.194 27.75 96.818 28.826 96.818 29.992 L 96.818 81.008 C 96.818 82.174 96.194 83.25 95.183 83.83 L 50.616 109.36 C 49.615 109.933 48.385 109.933 47.384 109.36 L 2.817 83.83 C 1.806 83.25 1.182 82.174 1.182 81.008 L 1.182 29.992 C 1.182 28.826 1.806 27.75 2.817 27.17 Z";
 
+  const testId = title ? `honeycomb-${title.toLowerCase().replace(/\s+/g, '-')}` : 'honeycomb-icon';
+
   const content = (
     <div 
       className="relative inline-block cursor-pointer transition-all duration-300 ease-out"
@@ -35,7 +37,7 @@ export default function HoneycombButton({
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      data-testid={`honeycomb-${title?.toLowerCase().replace(/\s+/g, '-')}`}
+      data-testid={testId}
     >
       <svg
         width={width}

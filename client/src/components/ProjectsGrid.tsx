@@ -20,16 +20,19 @@ const SOCIAL_LINKS = [
 export default function ProjectsGrid() {
   const hexWidth = 120;
   const hexHeight = 136;
-  const radius = 140;
+  const radius = 145;
 
   return (
-    <div className="flex flex-col gap-8 p-8 relative">
+    <div className="flex flex-col gap-8 p-6 lg:p-8 relative animate-fade-in">
       <div className="relative">
-        <h2 className="text-sm font-semibold mb-8 text-muted-foreground uppercase tracking-wide relative z-10">
-          Latest Projects
-        </h2>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide relative z-10">
+            Latest Projects
+          </h2>
+          <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent ml-4" />
+        </div>
         
-        <div className="relative flex justify-center items-center" style={{ minHeight: '480px' }}>
+        <div className="relative flex justify-center items-center pb-8" style={{ minHeight: '520px' }}>
           <HexagonBackground />
           
           <div className="relative z-10" style={{ width: `${radius * 2 + hexWidth}px`, height: `${radius * 2 + hexHeight}px` }}>
@@ -61,6 +64,7 @@ export default function ProjectsGrid() {
                     left: `${x}px`,
                     top: `${y}px`,
                     transform: 'translate(-50%, -50%)',
+                    animation: `fadeIn 0.6s ease-out ${idx * 0.1}s both`
                   }}
                 >
                   <HoneycombButton
@@ -76,18 +80,25 @@ export default function ProjectsGrid() {
       </div>
 
       <div className="pt-4 border-t border-border relative z-10">
-        <h3 className="text-xs font-semibold mb-4 text-muted-foreground uppercase tracking-wide">
-          Connect
-        </h3>
+        <div className="flex items-center gap-4 mb-4">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            Connect
+          </h3>
+          <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+        </div>
         <div className="flex gap-2 justify-center">
           {SOCIAL_LINKS.map((social, idx) => (
-            <HoneycombButton
+            <div 
               key={idx}
-              icon={social.icon}
-              href={social.href}
-              size="sm"
-              color={social.color}
-            />
+              style={{ animation: `fadeIn 0.5s ease-out ${0.6 + idx * 0.1}s both` }}
+            >
+              <HoneycombButton
+                icon={social.icon}
+                href={social.href}
+                size="sm"
+                color={social.color}
+              />
+            </div>
           ))}
         </div>
       </div>

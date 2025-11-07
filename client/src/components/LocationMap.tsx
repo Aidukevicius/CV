@@ -19,7 +19,10 @@ export default function LocationMap({ city, timezone }: LocationMapProps) {
     let animationId: number;
 
     const drawMap = () => {
-      ctx.fillStyle = "#0a0a0a";
+      const gradient = ctx.createLinearGradient(0, 0, 200, 80);
+      gradient.addColorStop(0, "#0a0a0a");
+      gradient.addColorStop(1, "#0f0f0f");
+      ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 200, 80);
 
       ctx.strokeStyle = "#1a1a1a";
@@ -66,17 +69,18 @@ export default function LocationMap({ city, timezone }: LocationMapProps) {
       const pulseSize = 3 + Math.sin(frame * 0.1) * 2;
       const pulseOpacity = 0.3 + Math.sin(frame * 0.1) * 0.2;
       
-      ctx.fillStyle = `rgba(255, 255, 255, ${pulseOpacity * 0.5})`;
+      const pulseGradient = ctx.createRadialGradient(markerX, markerY, 0, markerX, markerY, pulseSize * 4);
+      pulseGradient.addColorStop(0, `rgba(168, 85, 247, ${pulseOpacity})`);
+      pulseGradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
+      ctx.fillStyle = pulseGradient;
       ctx.beginPath();
       ctx.arc(markerX, markerY, pulseSize * 4, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = `rgba(255, 255, 255, ${pulseOpacity})`;
-      ctx.beginPath();
-      ctx.arc(markerX, markerY, pulseSize * 2.5, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#ffffff";
+      const innerGradient = ctx.createRadialGradient(markerX, markerY, 0, markerX, markerY, pulseSize);
+      innerGradient.addColorStop(0, '#ffffff');
+      innerGradient.addColorStop(1, '#a855f7');
+      ctx.fillStyle = innerGradient;
       ctx.beginPath();
       ctx.arc(markerX, markerY, pulseSize, 0, Math.PI * 2);
       ctx.fill();
@@ -101,14 +105,15 @@ export default function LocationMap({ city, timezone }: LocationMapProps) {
   }, []);
 
   return (
-    <div className="relative p-4 bg-card rounded-md border border-card-border overflow-hidden">
+    <div className="relative p-4 bg-card rounded-md border border-card-border overflow-hidden hover-elevate transition-all group">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       <canvas
         ref={canvasRef}
         width={200}
         height={80}
-        className="w-full h-auto rounded"
+        className="w-full h-auto rounded relative z-10"
       />
-      <div className="absolute bottom-2 left-4 text-sm">
+      <div className="absolute bottom-2 left-4 text-sm z-10">
         <div className="font-medium text-foreground">{city}</div>
         <div className="text-muted-foreground font-mono text-xs">
           {new Date().toLocaleTimeString('en-US', { 
