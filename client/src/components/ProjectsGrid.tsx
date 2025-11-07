@@ -86,10 +86,11 @@ export default function ProjectsGrid() {
           <div className="h-px bg-gradient-to-r from-border to-transparent" />
         </div>
 
-        <div className="flex-1 flex items-center justify-center min-h-[400px] py-8">
-          <div className="relative" style={{ width: '600px', height: '600px' }}>
-            {/* Center hex */}
-            <div
+        <div className="flex-1 flex items-center justify-center min-h-[500px] py-8 px-4">
+          <div className="relative flex items-center justify-center" style={{ width: '100%', maxWidth: '600px', height: '500px' }}>
+            <div className="relative" style={{ width: '400px', height: '400px' }}>
+              {/* Center hex */}
+              <div
               className="absolute"
               style={{
                 left: '50%',
@@ -136,6 +137,7 @@ export default function ProjectsGrid() {
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
 
