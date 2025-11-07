@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 interface HoneycombButtonProps {
@@ -7,6 +8,7 @@ interface HoneycombButtonProps {
   href?: string;
   size?: "sm" | "md";
   color?: string;
+  imageUrl?: string;
 }
 
 export default function HoneycombButton({ 
@@ -15,11 +17,13 @@ export default function HoneycombButton({
   description, 
   href,
   size = "md",
-  color = "rgba(99, 102, 241, 0.7)"
+  color = "rgba(120, 140, 100, 0.3)",
+  imageUrl
 }: HoneycombButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   
-  const scale = size === "sm" ? 0.7 : 1.15;
+  const baseScale = size === "sm" ? 0.7 : 1.15;
+  const scale = isHovered && imageUrl ? baseScale * 2 : baseScale;
   const width = 98 * scale;
   const height = 111 * scale;
   
@@ -29,11 +33,11 @@ export default function HoneycombButton({
 
   const content = (
     <div 
-      className="relative inline-block cursor-pointer transition-all duration-300 ease-out"
+      className="relative inline-block cursor-pointer transition-all duration-500 ease-out"
       style={{
         width: `${width}px`,
         height: `${height}px`,
-        transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+        zIndex: isHovered ? 50 : 1,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -53,26 +57,44 @@ export default function HoneycombButton({
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
+          {imageUrl && (
+            <clipPath id={`hexClip-${title || Math.random()}`}>
+              <path d={svgPath} />
+            </clipPath>
+          )}
         </defs>
+        
+        {imageUrl && isHovered ? (
+          <image
+            href={imageUrl}
+            x="0"
+            y="0"
+            width="98"
+            height="111"
+            preserveAspectRatio="xMidYMid slice"
+            clipPath={`url(#hexClip-${title || Math.random()})`}
+            opacity="0.7"
+          />
+        ) : null}
         
         <path
           d={svgPath}
-          fill={color}
-          stroke={isHovered ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 255, 255, 0.15)"}
-          strokeWidth="1.2"
-          className="transition-all duration-300"
+          fill={imageUrl && isHovered ? "rgba(0, 0, 0, 0.6)" : color}
+          stroke="hsl(120 20% 45%)"
+          strokeWidth="1.5"
+          className="transition-all duration-500"
           style={{ filter: isHovered ? `url(#glow-${title || Math.random()})` : 'none' }}
         />
       </svg>
       
       <div 
-        className="absolute inset-0 flex flex-col items-center justify-center text-center p-3 transition-opacity duration-300"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center p-3 transition-all duration-500"
         style={{
-          opacity: isHovered && description ? 0 : 1,
+          opacity: isHovered && imageUrl ? 0 : 1,
         }}
       >
         {icon && (
-          <div className="text-white transition-transform duration-300" style={{ 
+          <div className="text-white transition-transform duration-500" style={{ 
             fontSize: size === "sm" ? "20px" : "28px",
             transform: isHovered ? 'scale(1.1)' : 'scale(1)'
           }}>
@@ -86,15 +108,15 @@ export default function HoneycombButton({
         )}
       </div>
 
-      {description && (
+      {(description || imageUrl) && isHovered && (
         <div 
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 py-3 transition-opacity duration-300"
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 py-4 transition-opacity duration-500"
           style={{
-            opacity: isHovered ? 1 : 0,
+            opacity: 1,
           }}
         >
-          <div className="text-sm font-bold text-white mb-1">{title}</div>
-          <div className="text-xs text-white/80 leading-tight">{description}</div>
+          {title && <div className="text-base font-bold text-white mb-2 z-10">{title}</div>}
+          {description && <div className="text-xs text-white/90 leading-tight z-10">{description}</div>}
         </div>
       )}
     </div>

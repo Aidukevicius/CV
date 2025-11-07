@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import PersonalInfo from "@/components/PersonalInfo";
 import BugShooterGame from "@/components/BugShooterGame";
@@ -10,9 +11,10 @@ export default function Home() {
 
   return (
     <>
-      <div className="h-screen w-full overflow-hidden bg-background relative">
-        <div className="hidden lg:grid grid-cols-12 h-full">
-          <div className="col-span-4 border-r border-border overflow-y-auto">
+      <div className="min-h-screen w-full bg-background relative">
+        {/* Desktop Layout */}
+        <div className="hidden lg:grid lg:grid-cols-12 lg:h-screen">
+          <div className="col-span-4 border-r overflow-y-auto" style={{ borderColor: "hsl(120 20% 30%)" }}>
             <PersonalInfo />
           </div>
           
@@ -20,18 +22,19 @@ export default function Home() {
             <BugShooterGame />
           </div>
           
-          <div className="col-span-4 border-l border-border overflow-y-auto">
+          <div className="col-span-4 border-l overflow-y-auto" style={{ borderColor: "hsl(120 20% 30%)" }}>
             <ProjectsGrid />
           </div>
         </div>
 
-        <div className="lg:hidden h-full overflow-y-auto">
-          <div className="min-h-screen flex flex-col">
-            <div className="flex-shrink-0 border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        {/* Mobile/Tablet Layout */}
+        <div className="lg:hidden min-h-screen overflow-y-auto">
+          <div className="flex flex-col">
+            <div className="flex-shrink-0 border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10" style={{ borderColor: "hsl(120 20% 30%)" }}>
               <PersonalInfo />
             </div>
 
-            <div className="relative bg-background">
+            <div className="relative bg-background min-h-[60vh]">
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -39,6 +42,7 @@ export default function Home() {
                   onClick={() => setGameFullscreen(true)}
                   className="bg-background/80 backdrop-blur-sm"
                   data-testid="button-fullscreen"
+                  style={{ borderColor: "hsl(120 20% 30%)" }}
                 >
                   <Maximize2 className="w-5 h-5" />
                 </Button>
@@ -46,13 +50,14 @@ export default function Home() {
               <BugShooterGame />
             </div>
 
-            <div className="border-t border-border">
+            <div className="border-t min-h-screen" style={{ borderColor: "hsl(120 20% 30%)" }}>
               <ProjectsGrid />
             </div>
           </div>
         </div>
       </div>
 
+      {/* Fullscreen Game Modal */}
       {gameFullscreen && (
         <div className="fixed inset-0 z-50 bg-background flex flex-col">
           <div className="absolute top-4 right-4 z-20">
@@ -62,6 +67,7 @@ export default function Home() {
               onClick={() => setGameFullscreen(false)}
               className="bg-background/80 backdrop-blur-sm"
               data-testid="button-close-fullscreen"
+              style={{ borderColor: "hsl(120 20% 30%)" }}
             >
               <X className="w-5 h-5" />
             </Button>

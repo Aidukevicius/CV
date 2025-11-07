@@ -1,3 +1,4 @@
+
 export default function HexagonBackground() {
   const createHexagonPath = (size: number) => {
     const points: [number, number][] = [];
@@ -32,8 +33,8 @@ export default function HexagonBackground() {
 
   return (
     <svg 
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-20" 
-      style={{ overflow: 'visible' }}
+      className="absolute inset-0 w-full h-full pointer-events-none" 
+      style={{ overflow: 'visible', opacity: 0.3 }}
     >
       <g transform="translate(200, 200)">
         {hexPositions.map((pos, idx) => (
@@ -42,9 +43,8 @@ export default function HexagonBackground() {
             d={createHexagonPath(50)}
             transform={`translate(${pos.x}, ${pos.y})`}
             fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            className="text-border"
+            stroke="hsl(120 20% 30%)"
+            strokeWidth="1.5"
           />
         ))}
       </g>
