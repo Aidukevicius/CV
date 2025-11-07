@@ -86,8 +86,8 @@ export default function ProjectsGrid() {
           <div className="h-px bg-gradient-to-r from-border to-transparent" />
         </div>
 
-        <div className="flex-1 flex items-center justify-center py-8 px-4">
-          <div className="relative" style={{ width: '500px', height: '500px' }}>
+        <div className="flex-1 flex items-center justify-center py-8 px-4 overflow-hidden">
+          <div className="relative flex items-center justify-center" style={{ width: '100%', maxWidth: '650px', minHeight: '550px' }}>
             {/* Center hexagon */}
             <div
               className="absolute"
@@ -106,12 +106,14 @@ export default function ProjectsGrid() {
               />
             </div>
             
-            {/* 6 hexagons around center in a perfect circle */}
+            {/* 6 hexagons around center fitting together like a honeycomb */}
             {PROJECTS.slice(1).map((project, idx) => {
-              // For flat-top hexagons with scale 1.3:
-              // width ≈ 127.4px, so radius should be ~127px for touching hexagons
-              const angle = (Math.PI / 3) * idx; // 60 degree increments (π/3 radians)
-              const radius = 165; // Adjusted for hexagons to fit nicely together
+              // For flat-top hexagons at scale 1.3:
+              // Width = 98 * 1.3 ≈ 127.4px
+              // Height = 111 * 1.3 ≈ 144.3px
+              // For honeycomb fit: radius = width of hexagon ≈ 127px
+              const angle = (Math.PI / 3) * idx; // 60° increments
+              const radius = 127; // Distance from center for proper honeycomb fit
               const x = Math.cos(angle) * radius;
               const y = Math.sin(angle) * radius;
               
