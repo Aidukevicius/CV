@@ -87,7 +87,7 @@ export default function ProjectsGrid() {
         </div>
 
         <div className="flex-1 flex items-center justify-center min-h-[400px] py-8">
-          <div className="relative" style={{ width: '500px', height: '500px' }}>
+          <div className="relative" style={{ width: '600px', height: '600px' }}>
             {/* Center hex */}
             <div
               className="absolute"
@@ -108,8 +108,10 @@ export default function ProjectsGrid() {
             
             {/* 6 hexes around center */}
             {PROJECTS.slice(1).map((project, idx) => {
-              const angle = (Math.PI / 3) * idx - Math.PI / 2;
-              const radius = 140;
+              // Position hexagons in a circle around the center
+              // Start from top and go clockwise
+              const angle = (Math.PI / 3) * idx - Math.PI / 2; // -90 degrees to start at top
+              const radius = 160; // Distance from center
               const x = Math.cos(angle) * radius;
               const y = Math.sin(angle) * radius;
               
@@ -118,9 +120,9 @@ export default function ProjectsGrid() {
                   key={project.title}
                   className="absolute"
                   style={{
-                    left: '50%',
-                    top: '50%',
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                    left: `calc(50% + ${x}px)`,
+                    top: `calc(50% + ${y}px)`,
+                    transform: 'translate(-50%, -50%)',
                     animation: `fadeIn 0.6s ease-out ${(idx + 1) * 0.1}s both`
                   }}
                 >
