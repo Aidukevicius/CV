@@ -86,24 +86,55 @@ export default function ProjectsGrid() {
           <div className="h-px bg-gradient-to-r from-border to-transparent" />
         </div>
 
-        <div className="flex-1 py-8">
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto px-4">
-            {PROJECTS.map((project, idx) => (
-              <div
-                key={project.title}
-                className="flex justify-center"
-                style={{
-                  animation: `fadeIn 0.6s ease-out ${idx * 0.1}s both`
-                }}
-              >
-                <HoneycombButton
-                  title={project.title}
-                  description={project.description}
-                  color={project.color}
-                  imageUrl={project.imageUrl}
-                />
-              </div>
-            ))}
+        <div className="flex-1 flex items-center justify-center py-8 px-4">
+          <div className="relative" style={{ width: '500px', height: '500px' }}>
+            {/* Center hexagon */}
+            <div
+              className="absolute"
+              style={{
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                animation: 'fadeIn 0.6s ease-out 0s both'
+              }}
+            >
+              <HoneycombButton
+                title={PROJECTS[0].title}
+                description={PROJECTS[0].description}
+                color={PROJECTS[0].color}
+                imageUrl={PROJECTS[0].imageUrl}
+              />
+            </div>
+            
+            {/* 6 hexagons around center in a perfect circle */}
+            {PROJECTS.slice(1).map((project, idx) => {
+              // For flat-top hexagons with scale 1.3:
+              // width ≈ 127.4px, so radius should be ~127px for touching hexagons
+              const angle = (Math.PI / 3) * idx; // 60 degree increments (π/3 radians)
+              const radius = 165; // Adjusted for hexagons to fit nicely together
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
+              
+              return (
+                <div
+                  key={project.title}
+                  className="absolute"
+                  style={{
+                    left: `calc(50% + ${x}px)`,
+                    top: `calc(50% + ${y}px)`,
+                    transform: 'translate(-50%, -50%)',
+                    animation: `fadeIn 0.6s ease-out ${(idx + 1) * 0.1}s both`
+                  }}
+                >
+                  <HoneycombButton
+                    title={project.title}
+                    description={project.description}
+                    color={project.color}
+                    imageUrl={project.imageUrl}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 
