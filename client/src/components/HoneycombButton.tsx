@@ -15,11 +15,11 @@ export default function HoneycombButton({
   description, 
   href,
   size = "md",
-  color = "rgba(99, 102, 241, 0.6)"
+  color = "rgba(99, 102, 241, 0.7)"
 }: HoneycombButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   
-  const scale = size === "sm" ? 0.7 : 1;
+  const scale = size === "sm" ? 0.7 : 1.15;
   const width = 98 * scale;
   const height = 111 * scale;
   
@@ -42,14 +42,24 @@ export default function HoneycombButton({
         height={height}
         viewBox="0 0 98 111"
         className="absolute inset-0"
-        style={{ imageRendering: 'pixelated' }}
       >
+        <defs>
+          <filter id={`glow-${title || Math.random()}`}>
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
         <path
           d={svgPath}
-          fill={isHovered ? color : "rgba(15, 15, 15, 0)"}
-          stroke={isHovered ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.03)"}
-          strokeWidth="0.58"
+          fill={color}
+          stroke={isHovered ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 255, 255, 0.15)"}
+          strokeWidth="1.2"
           className="transition-all duration-300"
+          style={{ filter: isHovered ? `url(#glow-${title || Math.random()})` : 'none' }}
         />
       </svg>
       
@@ -60,15 +70,15 @@ export default function HoneycombButton({
         }}
       >
         {icon && (
-          <div className="text-foreground transition-transform duration-300" style={{ 
-            fontSize: size === "sm" ? "18px" : "24px",
+          <div className="text-white transition-transform duration-300" style={{ 
+            fontSize: size === "sm" ? "20px" : "28px",
             transform: isHovered ? 'scale(1.1)' : 'scale(1)'
           }}>
             {icon}
           </div>
         )}
         {title && !icon && (
-          <div className="text-[11px] font-medium text-foreground/80 px-2 leading-tight">
+          <div className="text-sm font-semibold text-white px-2 leading-tight">
             {title}
           </div>
         )}
@@ -81,8 +91,8 @@ export default function HoneycombButton({
             opacity: isHovered ? 1 : 0,
           }}
         >
-          <div className="text-xs font-semibold text-white mb-1">{title}</div>
-          <div className="text-[10px] text-white/70 leading-tight">{description}</div>
+          <div className="text-sm font-bold text-white mb-1">{title}</div>
+          <div className="text-xs text-white/80 leading-tight">{description}</div>
         </div>
       )}
     </div>

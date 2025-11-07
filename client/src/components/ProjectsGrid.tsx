@@ -1,4 +1,5 @@
 import HoneycombButton from "./HoneycombButton";
+import HexagonBackground from "./HexagonBackground";
 import { Github, Linkedin, Twitter } from "lucide-react";
 
 const PROJECTS = [
@@ -17,19 +18,21 @@ const SOCIAL_LINKS = [
 ];
 
 export default function ProjectsGrid() {
-  const hexWidth = 98;
-  const hexHeight = 111;
-  const radius = 115;
+  const hexWidth = 120;
+  const hexHeight = 136;
+  const radius = 140;
 
   return (
-    <div className="flex flex-col gap-8 p-8">
-      <div>
-        <h2 className="text-sm font-semibold mb-6 text-muted-foreground uppercase tracking-wide">
+    <div className="flex flex-col gap-8 p-8 relative">
+      <div className="relative">
+        <h2 className="text-sm font-semibold mb-8 text-muted-foreground uppercase tracking-wide relative z-10">
           Latest Projects
         </h2>
         
-        <div className="flex justify-center items-center" style={{ minHeight: '320px' }}>
-          <div className="relative" style={{ width: `${radius * 2 + hexWidth}px`, height: `${radius * 2 + hexHeight}px` }}>
+        <div className="relative flex justify-center items-center" style={{ minHeight: '480px' }}>
+          <HexagonBackground />
+          
+          <div className="relative z-10" style={{ width: `${radius * 2 + hexWidth}px`, height: `${radius * 2 + hexHeight}px` }}>
             <div 
               className="absolute"
               style={{
@@ -72,7 +75,7 @@ export default function ProjectsGrid() {
         </div>
       </div>
 
-      <div className="pt-4 border-t border-border">
+      <div className="pt-4 border-t border-border relative z-10">
         <h3 className="text-xs font-semibold mb-4 text-muted-foreground uppercase tracking-wide">
           Connect
         </h3>
