@@ -109,9 +109,10 @@ export default function ProjectsGrid() {
             {/* 6 hexes around center */}
             {PROJECTS.slice(1).map((project, idx) => {
               // Position hexagons in a circle around the center
-              // Start from top and go clockwise
-              const angle = (Math.PI / 3) * idx - Math.PI / 2; // -90 degrees to start at top
-              const radius = 120; // Distance from center
+              // For flat-top hexagons: radius should be approximately the width of a hex
+              // to make them touch properly
+              const angle = (Math.PI / 3) * idx; // Start at 0 degrees (right side)
+              const radius = 145; // Distance from center (adjusted for hexagon size)
               const x = Math.cos(angle) * radius;
               const y = Math.sin(angle) * radius;
               
