@@ -43,7 +43,7 @@ export default function HexagonBackground() {
             d={createHexagonPath(50)}
             transform={`translate(${pos.x}, ${pos.y})`}
             fill="none"
-            stroke="hsl(120 20% 25%)"
+            stroke="rgba(255, 255, 255, 0.15)"
             strokeWidth="1"
           />
         ))}

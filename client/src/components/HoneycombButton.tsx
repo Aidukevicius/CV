@@ -9,6 +9,8 @@ interface HoneycombButtonProps {
   size?: "sm" | "md";
   color?: string;
   imageUrl?: string;
+  popDirection?: "up" | "center";
+  angle?: number;
 }
 
 export default function HoneycombButton({ 
@@ -18,7 +20,9 @@ export default function HoneycombButton({
   href,
   size = "md",
   color = "rgba(120, 140, 100, 0.3)",
-  imageUrl
+  imageUrl,
+  popDirection = "up",
+  angle = 0
 }: HoneycombButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -26,6 +30,17 @@ export default function HoneycombButton({
   const scale = isHovered && imageUrl ? baseScale * 1.8 : baseScale;
   const width = 98 * scale;
   const height = 111 * scale;
+  
+  // Calculate transform origin for pop direction
+  let transformOrigin = 'center center';
+  if (popDirection === 'up') {
+    transformOrigin = 'center bottom';
+  } else if (popDirection === 'center') {
+    // Pop toward center means transform origin is away from center
+    const originX = 50 - Math.cos(angle) * 100; // Opposite direction
+    const originY = 50 - Math.sin(angle) * 100;
+    transformOrigin = `${originX}% ${originY}%`;
+  }
   
   const svgPath = "M 47.384 1.64 C 48.385 1.067 49.615 1.067 50.616 1.64 L 95.183 27.17 C 96.194 27.75 96.818 28.826 96.818 29.992 L 96.818 81.008 C 96.818 82.174 96.194 83.25 95.183 83.83 L 50.616 109.36 C 49.615 109.933 48.385 109.933 47.384 109.36 L 2.817 83.83 C 1.806 83.25 1.182 82.174 1.182 81.008 L 1.182 29.992 C 1.182 28.826 1.806 27.75 2.817 27.17 Z";
 
@@ -38,6 +53,7 @@ export default function HoneycombButton({
         width: `${width}px`,
         height: `${height}px`,
         zIndex: isHovered ? 50 : 1,
+        transformOrigin: transformOrigin
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -81,7 +97,7 @@ export default function HoneycombButton({
           <path
             d={svgPath}
             fill={imageUrl && isHovered ? "rgba(0, 0, 0, 0.7)" : color}
-            stroke="hsl(120 20% 45%)"
+            stroke="rgba(255, 255, 255, 0.6)"
             strokeWidth="1.5"
             className="transition-all duration-500"
             style={{ filter: isHovered ? `url(#glow-${title || Math.random()})` : 'none' }}

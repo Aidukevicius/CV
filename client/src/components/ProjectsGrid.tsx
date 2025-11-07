@@ -78,17 +78,17 @@ export default function ProjectsGrid() {
         <HexagonBackground />
       </div>
       
-      <div className="p-6 flex-1 flex flex-col relative z-10 overflow-y-auto">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2" style={{ color: "hsl(120 20% 55%)" }}>
+      <div className="p-6 flex-1 flex flex-col relative z-10">
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold mb-2" style={{ color: "hsl(0 0% 70%)" }}>
             Projects
           </h2>
           <div className="h-px bg-gradient-to-r from-border to-transparent" />
         </div>
 
-        <div className="flex-1 flex items-center justify-center py-8 px-4 overflow-hidden">
-          <div className="relative flex items-center justify-center" style={{ width: '100%', maxWidth: '650px', minHeight: '550px' }}>
-            {/* Center hexagon */}
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="relative flex items-center justify-center" style={{ width: '100%', maxWidth: '650px', height: '500px' }}>
+            {/* Center hexagon - pops straight up */}
             <div
               className="absolute"
               style={{
@@ -103,15 +103,12 @@ export default function ProjectsGrid() {
                 description={PROJECTS[0].description}
                 color={PROJECTS[0].color}
                 imageUrl={PROJECTS[0].imageUrl}
+                popDirection="up"
               />
             </div>
             
-            {/* 6 hexagons around center fitting together like a honeycomb */}
+            {/* 6 hexagons around center - pop toward the center */}
             {PROJECTS.slice(1).map((project, idx) => {
-              // For flat-top hexagons at scale 1.3:
-              // Width = 98 * 1.3 ≈ 127.4px
-              // Height = 111 * 1.3 ≈ 144.3px
-              // For honeycomb fit: radius = width of hexagon ≈ 127px
               const angle = (Math.PI / 3) * idx; // 60° increments
               const radius = 127; // Distance from center for proper honeycomb fit
               const x = Math.cos(angle) * radius;
@@ -133,6 +130,8 @@ export default function ProjectsGrid() {
                     description={project.description}
                     color={project.color}
                     imageUrl={project.imageUrl}
+                    popDirection="center"
+                    angle={angle}
                   />
                 </div>
               );
@@ -142,7 +141,7 @@ export default function ProjectsGrid() {
 
         <div className="pt-6 relative z-10 mt-auto">
           <div className="flex items-center gap-4 mb-4">
-            <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(120 20% 50%)" }}>
+            <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(0 0% 60%)" }}>
               Connect
             </h3>
             <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
