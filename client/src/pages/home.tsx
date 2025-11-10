@@ -16,14 +16,14 @@ export default function Home() {
         {/* Desktop Layout - 3 equal columns */}
         <div className="hidden lg:grid lg:grid-cols-3 lg:h-screen">
           {/* Left Column - Personal Info */}
-          <div className="overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="overflow-hidden flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <div className="w-full">
               <PersonalInfo />
             </div>
           </div>
           
           {/* Center Column - Game + Robot */}
-          <div className="overflow-y-auto flex flex-col items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+          <div className="overflow-hidden flex flex-col items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
             <div className="w-full flex-1 flex items-center justify-center">
               <BugShooterGame />
             </div>
@@ -33,7 +33,7 @@ export default function Home() {
           </div>
           
           {/* Right Column - Projects */}
-          <div className="overflow-y-auto flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="overflow-hidden flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <ProjectsGrid />
           </div>
         </div>
@@ -41,14 +41,14 @@ export default function Home() {
         {/* Tablet Layout - 2 columns + scroll */}
         <div className="hidden md:grid md:grid-cols-2 lg:hidden min-h-screen">
           {/* Left Column - Personal Info */}
-          <div className="h-screen overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="h-screen overflow-hidden flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <div className="w-full">
               <PersonalInfo />
             </div>
           </div>
           
           {/* Right Column - Game + Robot */}
-          <div className="h-screen overflow-y-auto flex flex-col items-center justify-center" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+          <div className="h-screen overflow-hidden flex flex-col items-center justify-center" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
             <div className="w-full flex-1 flex items-center justify-center relative">
               <div className="absolute top-4 right-4 z-20">
                 <Button
@@ -69,21 +69,21 @@ export default function Home() {
           </div>
           
           {/* Projects Section - Full Width Below */}
-          <div className="col-span-2 min-h-screen flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="col-span-2 h-screen overflow-hidden flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <ProjectsGrid />
           </div>
         </div>
 
         {/* Mobile Layout - Single column, no robot */}
-        <div className="md:hidden min-h-screen overflow-y-auto">
+        <div className="md:hidden min-h-screen overflow-hidden">
           <div className="flex flex-col">
             {/* Personal Info Section */}
-            <div className="min-h-screen flex items-center sticky top-0 z-10" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="h-screen flex items-center sticky top-0 z-10" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <PersonalInfo />
             </div>
 
             {/* Game Section */}
-            <div className="min-h-screen flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="h-screen overflow-hidden flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -99,7 +99,7 @@ export default function Home() {
             </div>
 
             {/* Projects Section */}
-            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="h-screen overflow-hidden flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <ProjectsGrid />
             </div>
           </div>
