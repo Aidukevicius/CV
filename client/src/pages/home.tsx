@@ -3,6 +3,7 @@ import { useState } from "react";
 import PersonalInfo from "@/components/PersonalInfo";
 import BugShooterGame from "@/components/BugShooterGame";
 import ProjectsGrid from "@/components/ProjectsGrid";
+import Robot from "@/components/Robot";
 import { Maximize2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -55,6 +56,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Robot decoration at bottom center */}
+      <Robot />
 
       {/* Fullscreen Game Modal */}
       {gameFullscreen && (
