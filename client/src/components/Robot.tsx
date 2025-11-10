@@ -1,6 +1,5 @@
-
 import { useRef, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -21,40 +20,18 @@ function RobotModel() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  useEffect(() => {
+  useFrame(() => {
     if (!robotRef.current) return;
 
-    const animate = () => {
-      if (!robotRef.current) return;
+    const head = robotRef.current.getObjectByName('Bone.001_0117');
+    if (head) {
+      const targetX = mousePos.current.x * 0.3;
+      const targetY = mousePos.current.y * 0.2;
 
-      const head = robotRef.current.getObjectByName('Bone.001_0117');
-      if (head) {
-        const targetX = mousePos.current.x * 0.3;
-        const targetY = mousePos.current.y * 0.2;
-
-        head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, targetX, 0.1);
-        head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, targetY, 0.1);
-      }
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-  }, []);
-
-  useEffect(() => {
-    if (scene) {
-      scene.traverse((child) => {
-        if ((child as THREE.Mesh).isMesh) {
-          const mesh = child as THREE.Mesh;
-          if (mesh.material) {
-            const material = mesh.material as THREE.Material;
-            material.needsUpdate = true;
-          }
-        }
-      });
+      head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, targetX, 0.1);
+      head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, targetY, 0.1);
     }
-  }, [scene]);
+  });
 
   return (
     <group ref={robotRef}>
@@ -65,18 +42,18 @@ function RobotModel() {
 
 export default function Robot() {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" style={{ background: '#000000' }}>
       <Canvas
         camera={{ position: [0, 0, 5], fov: 50 }}
-        gl={{ 
+        gl={{
           antialias: true,
-          alpha: true,
-          preserveDrawingBuffer: true,
-          powerPreference: "high-performance"
+          alpha: false,
+          preserveDrawingBuffer: false,
+          powerPreference: "high-performance",
+          failIfMajorPerformanceCaveat: false
         }}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
       >
-        <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />
         <pointLight position={[-5, 5, 5]} intensity={0.5} />
