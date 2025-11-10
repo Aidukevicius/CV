@@ -78,7 +78,7 @@ export default function ProjectsGrid() {
         <HexagonBackground />
       </div>
       
-      <div className="flex flex-col relative z-10 w-full items-center">
+      <div className="flex flex-col relative z-10 w-full max-w-2xl items-center">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold mb-3" style={{ color: "hsl(0 0% 70%)" }}>
             Projects
@@ -86,18 +86,41 @@ export default function ProjectsGrid() {
           <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mx-auto w-32" />
         </div>
 
-        <div className="flex items-center justify-center mb-10">
-          <div className="relative" style={{ width: '450px', height: '450px' }}>
-            {/* Center hexagon - pops straight up */}
-            <div
-              className="absolute"
-              style={{
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                animation: 'fadeIn 0.6s ease-out 0s both'
-              }}
-            >
+        <div className="w-full mb-10">
+          {/* Honeycomb Grid - Row 1: 2 hexagons */}
+          <div className="flex justify-center gap-2 mb-[-1.5rem]">
+            <div style={{ animation: 'fadeIn 0.6s ease-out 0.1s both' }}>
+              <HoneycombButton
+                title={PROJECTS[1].title}
+                description={PROJECTS[1].description}
+                color={PROJECTS[1].color}
+                imageUrl={PROJECTS[1].imageUrl}
+                popDirection="center"
+              />
+            </div>
+            <div style={{ animation: 'fadeIn 0.6s ease-out 0.2s both' }}>
+              <HoneycombButton
+                title={PROJECTS[2].title}
+                description={PROJECTS[2].description}
+                color={PROJECTS[2].color}
+                imageUrl={PROJECTS[2].imageUrl}
+                popDirection="center"
+              />
+            </div>
+          </div>
+
+          {/* Row 2: 3 hexagons (including center) */}
+          <div className="flex justify-center gap-2 mb-[-1.5rem]">
+            <div style={{ animation: 'fadeIn 0.6s ease-out 0.3s both' }}>
+              <HoneycombButton
+                title={PROJECTS[3].title}
+                description={PROJECTS[3].description}
+                color={PROJECTS[3].color}
+                imageUrl={PROJECTS[3].imageUrl}
+                popDirection="center"
+              />
+            </div>
+            <div style={{ animation: 'fadeIn 0.6s ease-out 0s both' }}>
               <HoneycombButton
                 title={PROJECTS[0].title}
                 description={PROJECTS[0].description}
@@ -106,36 +129,37 @@ export default function ProjectsGrid() {
                 popDirection="up"
               />
             </div>
-            
-            {/* 6 hexagons around center - pop toward the center */}
-            {PROJECTS.slice(1).map((project, idx) => {
-              const angle = (Math.PI / 3) * idx; // 60° increments
-              const radius = 127; // Distance from center for proper honeycomb fit
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius;
-              
-              return (
-                <div
-                  key={project.title}
-                  className="absolute"
-                  style={{
-                    left: `calc(50% + ${x}px)`,
-                    top: `calc(50% + ${y}px)`,
-                    transform: 'translate(-50%, -50%)',
-                    animation: `fadeIn 0.6s ease-out ${(idx + 1) * 0.1}s both`
-                  }}
-                >
-                  <HoneycombButton
-                    title={project.title}
-                    description={project.description}
-                    color={project.color}
-                    imageUrl={project.imageUrl}
-                    popDirection="center"
-                    angle={angle}
-                  />
-                </div>
-              );
-            })}
+            <div style={{ animation: 'fadeIn 0.6s ease-out 0.4s both' }}>
+              <HoneycombButton
+                title={PROJECTS[4].title}
+                description={PROJECTS[4].description}
+                color={PROJECTS[4].color}
+                imageUrl={PROJECTS[4].imageUrl}
+                popDirection="center"
+              />
+            </div>
+          </div>
+
+          {/* Row 3: 2 hexagons */}
+          <div className="flex justify-center gap-2">
+            <div style={{ animation: 'fadeIn 0.6s ease-out 0.5s both' }}>
+              <HoneycombButton
+                title={PROJECTS[5].title}
+                description={PROJECTS[5].description}
+                color={PROJECTS[5].color}
+                imageUrl={PROJECTS[5].imageUrl}
+                popDirection="center"
+              />
+            </div>
+            <div style={{ animation: 'fadeIn 0.6s ease-out 0.6s both' }}>
+              <HoneycombButton
+                title={PROJECTS[6].title}
+                description={PROJECTS[6].description}
+                color={PROJECTS[6].color}
+                imageUrl={PROJECTS[6].imageUrl}
+                popDirection="center"
+              />
+            </div>
           </div>
         </div>
 
@@ -147,11 +171,11 @@ export default function ProjectsGrid() {
             </h3>
             <div className="h-px w-16 bg-gradient-to-l from-transparent to-border" />
           </div>
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-4 justify-center flex-wrap">
             {SOCIAL_LINKS.map((social, idx) => (
               <div 
                 key={idx}
-                style={{ animation: `fadeIn 0.5s ease-out ${0.6 + idx * 0.1}s both` }}
+                style={{ animation: `fadeIn 0.5s ease-out ${0.7 + idx * 0.1}s both` }}
               >
                 <HoneycombButton
                   icon={social.icon}
