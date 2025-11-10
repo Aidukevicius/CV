@@ -96,48 +96,23 @@ function LoadingFallback() {
 }
 
 export default function Robot() {
-  const canvasRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleContextLost = (event: Event) => {
-      event.preventDefault();
-      console.warn('WebGL context lost. Attempting to restore...');
-    };
-
-    const handleContextRestored = () => {
-      console.log('WebGL context restored successfully.');
-    };
-
-    const canvas = canvasRef.current?.querySelector('canvas');
-    if (canvas) {
-      canvas.addEventListener('webglcontextlost', handleContextLost);
-      canvas.addEventListener('webglcontextrestored', handleContextRestored);
-
-      return () => {
-        canvas.removeEventListener('webglcontextlost', handleContextLost);
-        canvas.removeEventListener('webglcontextrestored', handleContextRestored);
-      };
-    }
-  }, []);
-
   return (
     <ThreeErrorBoundary>
-      <div ref={canvasRef} className="w-full h-full" style={{ background: '#0a0a0f' }}>
-        <Suspense fallback={<LoadingFallback />}>
+      <div className="w-full h-full pointer-events-auto" style={{ background: 'transparent' }}>
+        <Suspense fallback={null}>
           <Canvas
             camera={{ position: [0, 1, 5], fov: 45 }}
             gl={{
               antialias: true,
               localClippingEnabled: true,
-              alpha: false,
+              alpha: true,
               preserveDrawingBuffer: false,
               powerPreference: 'high-performance',
               failIfMajorPerformanceCaveat: false,
             }}
-            dpr={[1, 1.5]}
+            dpr={[1, 2]}
+            style={{ background: 'transparent' }}
           >
-            <color attach="background" args={['#0a0a0f']} />
-            
             <ambientLight intensity={1.2} />
             <directionalLight position={[3, 4, 3]} intensity={1.5} castShadow />
             <directionalLight position={[-3, 2, -2]} intensity={0.8} />
