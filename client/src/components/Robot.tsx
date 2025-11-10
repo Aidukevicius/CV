@@ -97,7 +97,7 @@ function LoadingFallback() {
 
 export default function Robot() {
   return (
-    <ThreeErrorBoundary>
+    <ThreeErrorBoundary fallback={null}>
       <div className="w-full h-full pointer-events-auto" style={{ background: 'transparent' }}>
         <Suspense fallback={null}>
           <Canvas
