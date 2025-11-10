@@ -1,4 +1,5 @@
-import { useRef, useEffect } from 'react';
+
+import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -7,18 +8,6 @@ function RobotModel() {
   const { scene } = useGLTF('/models/robot/scene.gltf');
   const robotRef = useRef<THREE.Group>(null);
   const mousePos = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      mousePos.current = {
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1,
-      };
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   useFrame(() => {
     if (!robotRef.current) return;
@@ -34,7 +23,15 @@ function RobotModel() {
   });
 
   return (
-    <group ref={robotRef}>
+    <group 
+      ref={robotRef}
+      onPointerMove={(e) => {
+        mousePos.current = {
+          x: (e.clientX / window.innerWidth) * 2 - 1,
+          y: -(e.clientY / window.innerHeight) * 2 + 1,
+        };
+      }}
+    >
       <primitive object={scene} scale={2.5} position={[0, -1.5, 0]} />
     </group>
   );
@@ -48,9 +45,6 @@ export default function Robot() {
         gl={{
           antialias: true,
           alpha: false,
-          preserveDrawingBuffer: false,
-          powerPreference: "high-performance",
-          failIfMajorPerformanceCaveat: false
         }}
         dpr={[1, 1.5]}
       >
