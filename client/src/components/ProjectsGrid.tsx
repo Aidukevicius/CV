@@ -73,21 +73,21 @@ const SOCIAL_LINKS = [
 
 export default function ProjectsGrid() {
   return (
-    <div className="h-full flex flex-col relative" style={{ backgroundColor: 'hsl(0 0% 3%)' }}>
-      <div className="absolute inset-0 opacity-8">
+    <div className="w-full h-full flex flex-col relative py-8 px-4" style={{ backgroundColor: 'transparent' }}>
+      <div className="absolute inset-0 opacity-8 pointer-events-none">
         <HexagonBackground />
       </div>
       
-      <div className="p-6 flex-1 flex flex-col relative z-10">
-        <div className="mb-4">
+      <div className="flex-1 flex flex-col relative z-10 max-w-2xl mx-auto w-full">
+        <div className="mb-6 text-center">
           <h2 className="text-2xl font-bold mb-2" style={{ color: "hsl(0 0% 70%)" }}>
             Projects
           </h2>
-          <div className="h-px bg-gradient-to-r from-border to-transparent" />
+          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mx-auto w-32" />
         </div>
 
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="relative flex items-center justify-center" style={{ width: '100%', maxWidth: '650px', height: '500px' }}>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="relative flex items-center justify-center w-full" style={{ maxWidth: '500px', aspectRatio: '1 / 1' }}>
             {/* Center hexagon - pops straight up */}
             <div
               className="absolute"
@@ -139,12 +139,13 @@ export default function ProjectsGrid() {
           </div>
         </div>
 
-        <div className="pt-6 relative z-10 mt-auto">
-          <div className="flex items-center gap-4 mb-4">
-            <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(0 0% 60%)" }}>
+        <div className="pt-8 relative z-10 mt-auto">
+          <div className="flex items-center gap-4 mb-6 justify-center">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border max-w-16" />
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-center" style={{ color: "hsl(0 0% 60%)" }}>
               Connect
             </h3>
-            <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border max-w-16" />
           </div>
           <div className="flex gap-3 justify-center flex-wrap">
             {SOCIAL_LINKS.map((social, idx) => (

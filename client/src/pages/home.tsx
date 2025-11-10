@@ -13,29 +13,77 @@ export default function Home() {
   return (
     <>
       <div className="min-h-screen w-full bg-background relative">
-        {/* Desktop Layout */}
-        <div className="hidden lg:grid lg:grid-cols-12 lg:h-screen">
-          <div className="col-span-4 overflow-y-auto" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
-            <PersonalInfo />
+        {/* Desktop Layout - 3 equal columns */}
+        <div className="hidden lg:grid lg:grid-cols-3 lg:h-screen">
+          {/* Left Column - Personal Info */}
+          <div className="overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="w-full">
+              <PersonalInfo />
+            </div>
           </div>
           
-          <div className="col-span-4 overflow-y-auto" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <BugShooterGame />
+          {/* Center Column - Game + Robot */}
+          <div className="overflow-y-auto flex flex-col items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full flex-1 flex items-center justify-center">
+              <BugShooterGame />
+            </div>
+            <div className="w-full h-80 flex-shrink-0">
+              <Robot />
+            </div>
           </div>
           
-          <div className="col-span-4 overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          {/* Right Column - Projects */}
+          <div className="overflow-y-auto flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <ProjectsGrid />
           </div>
         </div>
 
-        {/* Mobile/Tablet Layout */}
-        <div className="lg:hidden min-h-screen overflow-y-auto">
+        {/* Tablet Layout - 2 columns + scroll */}
+        <div className="hidden md:grid md:grid-cols-2 lg:hidden min-h-screen">
+          {/* Left Column - Personal Info */}
+          <div className="h-screen overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="w-full">
+              <PersonalInfo />
+            </div>
+          </div>
+          
+          {/* Right Column - Game + Robot */}
+          <div className="h-screen overflow-y-auto flex flex-col items-center justify-center" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full flex-1 flex items-center justify-center relative">
+              <div className="absolute top-4 right-4 z-20">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setGameFullscreen(true)}
+                  className="bg-background/80 backdrop-blur-sm"
+                  data-testid="button-fullscreen"
+                >
+                  <Maximize2 className="w-5 h-5" />
+                </Button>
+              </div>
+              <BugShooterGame />
+            </div>
+            <div className="w-full h-64 flex-shrink-0">
+              <Robot />
+            </div>
+          </div>
+          
+          {/* Projects Section - Full Width Below */}
+          <div className="col-span-2 min-h-screen flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <ProjectsGrid />
+          </div>
+        </div>
+
+        {/* Mobile Layout - Single column, no robot */}
+        <div className="md:hidden min-h-screen overflow-y-auto">
           <div className="flex flex-col">
-            <div className="flex-shrink-0 bg-card/50 backdrop-blur-sm sticky top-0 z-10" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            {/* Personal Info Section */}
+            <div className="min-h-screen flex items-center sticky top-0 z-10" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <PersonalInfo />
             </div>
 
-            <div className="relative min-h-[60vh]" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            {/* Game Section */}
+            <div className="min-h-screen flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -50,16 +98,17 @@ export default function Home() {
               <BugShooterGame />
             </div>
 
-            <div className="min-h-screen" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            {/* Projects Section */}
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <ProjectsGrid />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Robot decoration at bottom center */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-80 h-80 pointer-events-none z-30">
-        <Robot />
+      {/* Robot decoration at bottom center - Desktop only */}
+      <div className="hidden lg:block fixed bottom-0 left-1/2 -translate-x-1/2 w-80 h-80 pointer-events-none z-0" style={{ left: '50%' }}>
+        {/* This is now handled in the center column */}
       </div>
 
       {/* Fullscreen Game Modal */}

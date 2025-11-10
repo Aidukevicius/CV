@@ -460,8 +460,8 @@ export default function BugShooterGame() {
   }, [gameStarted]);
 
   return (
-    <div className="flex flex-col items-center gap-4 p-6">
-      <div className="w-full">
+    <div className="flex flex-col items-center gap-4 p-6 w-full max-w-2xl mx-auto">
+      <div className="w-full max-w-md mx-auto">
         <div className="border border-border rounded-md overflow-hidden" style={{ backgroundColor: '#000' }}>
           <canvas
             ref={canvasRef}
