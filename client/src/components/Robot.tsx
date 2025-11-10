@@ -95,7 +95,32 @@ function LoadingFallback() {
   );
 }
 
+function checkWebGLSupport(): boolean {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    return !!gl;
+  } catch (e) {
+    return false;
+  }
+}
+
 export default function Robot() {
+  const [hasWebGL, setHasWebGL] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setHasWebGL(checkWebGLSupport());
+  }, []);
+
+  if (hasWebGL === null) {
+    return null;
+  }
+
+  if (!hasWebGL) {
+    console.log('WebGL not supported - robot disabled');
+    return null;
+  }
+
   return (
     <ThreeErrorBoundary fallback={null}>
       <div className="w-full h-full pointer-events-auto" style={{ background: 'transparent' }}>
