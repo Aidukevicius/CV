@@ -75,9 +75,9 @@ export default function Robot() {
           gl.setClearColor(0x000000, 0);
         }}
       >
-        <ambientLight intensity={0.3} color="#66ff66" />
-        <directionalLight position={[5, 5, 5]} intensity={0.5} color="#66ff66" />
-        <pointLight position={[-5, 5, 5]} intensity={0.3} color="#66ff66" />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={0.8} />
+        <pointLight position={[-5, 5, 5]} intensity={0.5} />
         <RobotModel />
       </Canvas>
     </div>
