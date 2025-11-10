@@ -73,12 +73,12 @@ const SOCIAL_LINKS = [
 
 export default function ProjectsGrid() {
   return (
-    <div className="w-full h-full flex flex-col relative py-12 px-8" style={{ backgroundColor: 'transparent' }}>
+    <div className="w-full h-full flex items-center justify-center relative px-6 py-8" style={{ backgroundColor: 'transparent' }}>
       <div className="absolute inset-0 opacity-8 pointer-events-none">
         <HexagonBackground />
       </div>
       
-      <div className="flex-1 flex flex-col relative z-10 max-w-xl mx-auto w-full justify-center">
+      <div className="flex flex-col relative z-10 w-full items-center">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold mb-3" style={{ color: "hsl(0 0% 70%)" }}>
             Projects
@@ -86,8 +86,8 @@ export default function ProjectsGrid() {
           <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mx-auto w-32" />
         </div>
 
-        <div className="flex items-center justify-center mb-12">
-          <div className="relative flex items-center justify-center" style={{ width: '450px', height: '450px' }}>
+        <div className="flex items-center justify-center mb-10">
+          <div className="relative" style={{ width: '450px', height: '450px' }}>
             {/* Center hexagon - pops straight up */}
             <div
               className="absolute"
@@ -139,15 +139,15 @@ export default function ProjectsGrid() {
           </div>
         </div>
 
-        <div className="relative z-10">
-          <div className="flex items-center gap-4 mb-6 justify-center">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border max-w-20" />
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-center" style={{ color: "hsl(0 0% 60%)" }}>
+        <div className="relative z-10 w-full flex flex-col items-center">
+          <div className="flex items-center gap-4 mb-5 justify-center">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-border" />
+            <h3 className="text-sm font-semibold uppercase tracking-wide" style={{ color: "hsl(0 0% 60%)" }}>
               Connect
             </h3>
-            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border max-w-20" />
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-border" />
           </div>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex gap-4 justify-center">
             {SOCIAL_LINKS.map((social, idx) => (
               <div 
                 key={idx}
