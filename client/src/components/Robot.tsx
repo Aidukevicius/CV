@@ -80,7 +80,7 @@ function RobotModel() {
 
   return (
     <group ref={robotRef}>
-      <primitive object={scene} scale={2.5} position={[0, -4.8, 0]} />
+      <primitive object={scene} scale={3} position={[0, -5.5, 0]} />
     </group>
   );
 }
@@ -89,7 +89,7 @@ export default function Robot() {
   return (
     <div className="w-full h-full pointer-events-auto" style={{ background: 'transparent' }}>
       <Canvas
-        camera={{ position: [0, 0.5, 5], fov: 50 }}
+        camera={{ position: [0, 1, 5], fov: 45 }}
         gl={{
           antialias: true,
           localClippingEnabled: true,

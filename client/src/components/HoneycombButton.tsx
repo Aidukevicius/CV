@@ -48,11 +48,10 @@ export default function HoneycombButton({
 
   const content = (
     <div 
-      className="relative inline-block cursor-pointer overflow-hidden"
+      className="relative inline-block cursor-pointer"
       style={{
         width: `${width}px`,
         height: `${height}px`,
-        clipPath: `polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)`,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
