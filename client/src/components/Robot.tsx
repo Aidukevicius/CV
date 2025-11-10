@@ -1,9 +1,7 @@
-
-import { useRef, Suspense, useEffect, useState } from 'react';
+import { useRef, useState, useEffect, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { ThreeErrorBoundary } from './ErrorBoundary';
 
 function RobotModel() {
   const { scene } = useGLTF('/models/robot/scene.gltf');
@@ -87,67 +85,28 @@ function RobotModel() {
   );
 }
 
-function LoadingFallback() {
-  return (
-    <div className="w-full h-full flex items-center justify-center bg-black">
-      <div className="text-white text-sm">Loading 3D model...</div>
-    </div>
-  );
-}
-
-function checkWebGLSupport(): boolean {
-  try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    return !!gl;
-  } catch (e) {
-    return false;
-  }
-}
-
 export default function Robot() {
-  const [hasWebGL, setHasWebGL] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    setHasWebGL(checkWebGLSupport());
-  }, []);
-
-  if (hasWebGL === null) {
-    return null;
-  }
-
-  if (!hasWebGL) {
-    console.log('WebGL not supported - robot disabled');
-    return null;
-  }
-
   return (
-    <ThreeErrorBoundary fallback={null}>
-      <div className="w-full h-full pointer-events-auto" style={{ background: 'transparent' }}>
+    <div className="w-full h-full pointer-events-auto" style={{ background: 'transparent' }}>
+      <Canvas
+        camera={{ position: [0, 1, 5], fov: 45 }}
+        gl={{
+          antialias: true,
+          localClippingEnabled: true,
+          alpha: true,
+        }}
+        style={{ background: 'transparent' }}
+      >
+        <ambientLight intensity={1.2} />
+        <directionalLight position={[3, 4, 3]} intensity={1.5} castShadow />
+        <directionalLight position={[-3, 2, -2]} intensity={0.8} />
+        <pointLight position={[0, 2, 2]} intensity={1.0} />
+        
         <Suspense fallback={null}>
-          <Canvas
-            camera={{ position: [0, 1, 5], fov: 45 }}
-            gl={{
-              antialias: true,
-              localClippingEnabled: true,
-              alpha: true,
-              preserveDrawingBuffer: false,
-              powerPreference: 'high-performance',
-              failIfMajorPerformanceCaveat: false,
-            }}
-            dpr={[1, 2]}
-            style={{ background: 'transparent' }}
-          >
-            <ambientLight intensity={1.2} />
-            <directionalLight position={[3, 4, 3]} intensity={1.5} castShadow />
-            <directionalLight position={[-3, 2, -2]} intensity={0.8} />
-            <pointLight position={[0, 2, 2]} intensity={1.0} />
-            
-            <RobotModel />
-          </Canvas>
+          <RobotModel />
         </Suspense>
-      </div>
-    </ThreeErrorBoundary>
+      </Canvas>
+    </div>
   );
 }
 
