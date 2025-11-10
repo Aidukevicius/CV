@@ -1,43 +1,88 @@
 
-import { useRef, Suspense, useEffect } from 'react';
+import { useRef, Suspense, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { ThreeErrorBoundary } from './ErrorBoundary';
 
 function RobotModel() {
-  const { scene } = useGLTF('/models/robot/scene.gltf', true);
+  const { scene } = useGLTF('/models/robot/scene.gltf');
   const robotRef = useRef<THREE.Group>(null);
-  const mousePos = useRef({ x: 0, y: 0 });
   const headRef = useRef<THREE.Object3D | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (robotRef.current && !headRef.current) {
-      headRef.current = robotRef.current.getObjectByName('Bone.001_0117') || null;
+    if (robotRef.current) {
+      const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0.5);
+      
+      robotRef.current.traverse((child) => {
+        if (!headRef.current) {
+          if (child.name === 'Bone001_0117') {
+            headRef.current = child;
+            console.log('Found head bone:', child.name);
+          }
+        }
+        
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          if (mesh.material) {
+            const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+            materials.forEach(mat => {
+              mat.clippingPlanes = [clippingPlane];
+              mat.clipShadows = true;
+            });
+          }
+        }
+      });
+      
+      console.log('Applied clipping plane to hide lower body');
     }
   }, [scene]);
 
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
+      const y = (event.clientY / window.innerHeight) * 2 - 1;
+      setMousePosition({ x, y });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   useFrame(() => {
-    if (!headRef.current) return;
+    if (headRef.current) {
+      const limitY = 0.5;
+      const limitX = 0.25;
+      
+      const targetRotationY = THREE.MathUtils.clamp(
+        mousePosition.x * 0.5,
+        -limitY,
+        limitY
+      );
+      const targetRotationX = THREE.MathUtils.clamp(
+        mousePosition.y * 0.3,
+        -limitX,
+        limitX
+      );
 
-    const targetX = mousePos.current.x * 0.3;
-    const targetY = mousePos.current.y * 0.2;
-
-    headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetX, 0.1);
-    headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetY, 0.1);
+      headRef.current.rotation.y = THREE.MathUtils.lerp(
+        headRef.current.rotation.y,
+        targetRotationY,
+        0.08
+      );
+      
+      headRef.current.rotation.x = THREE.MathUtils.lerp(
+        headRef.current.rotation.x,
+        targetRotationX,
+        0.08
+      );
+    }
   });
 
   return (
-    <group 
-      ref={robotRef}
-      onPointerMove={(e) => {
-        mousePos.current = {
-          x: (e.clientX / window.innerWidth) * 2 - 1,
-          y: -(e.clientY / window.innerHeight) * 2 + 1,
-        };
-      }}
-    >
-      <primitive object={scene} scale={2.5} position={[0, -1.5, 0]} />
+    <group ref={robotRef}>
+      <primitive object={scene} scale={3} position={[0, -5.5, 0]} />
     </group>
   );
 }
@@ -77,25 +122,27 @@ export default function Robot() {
 
   return (
     <ThreeErrorBoundary>
-      <div ref={canvasRef} className="w-full h-full" style={{ background: '#000000' }}>
+      <div ref={canvasRef} className="w-full h-full" style={{ background: '#0a0a0f' }}>
         <Suspense fallback={<LoadingFallback />}>
           <Canvas
-            camera={{ position: [0, 0, 5], fov: 50 }}
+            camera={{ position: [0, 1, 5], fov: 45 }}
             gl={{
               antialias: true,
+              localClippingEnabled: true,
               alpha: false,
               preserveDrawingBuffer: false,
               powerPreference: 'high-performance',
               failIfMajorPerformanceCaveat: false,
             }}
             dpr={[1, 1.5]}
-            onCreated={({ gl }) => {
-              gl.physicallyCorrectLights = false;
-            }}
           >
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[5, 5, 5]} intensity={0.8} />
-            <pointLight position={[-5, 5, 5]} intensity={0.5} />
+            <color attach="background" args={['#0a0a0f']} />
+            
+            <ambientLight intensity={1.2} />
+            <directionalLight position={[3, 4, 3]} intensity={1.5} castShadow />
+            <directionalLight position={[-3, 2, -2]} intensity={0.8} />
+            <pointLight position={[0, 2, 2]} intensity={1.0} />
+            
             <RobotModel />
           </Canvas>
         </Suspense>
