@@ -1,5 +1,6 @@
-import { useRef, useEffect, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+
+import { useRef, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -20,28 +21,35 @@ function RobotModel() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  useFrame(() => {
+  useEffect(() => {
     if (!robotRef.current) return;
 
-    const head = robotRef.current.getObjectByName('Head');
-    if (head) {
-      const targetX = mousePos.current.x * 0.3;
-      const targetY = mousePos.current.y * 0.2;
+    const animate = () => {
+      if (!robotRef.current) return;
 
-      head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, targetX, 0.1);
-      head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, targetY, 0.1);
-    }
-  });
+      const head = robotRef.current.getObjectByName('Bone.001_0117');
+      if (head) {
+        const targetX = mousePos.current.x * 0.3;
+        const targetY = mousePos.current.y * 0.2;
+
+        head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, targetX, 0.1);
+        head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, targetY, 0.1);
+      }
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+  }, []);
 
   useEffect(() => {
     if (scene) {
       scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           const mesh = child as THREE.Mesh;
-          mesh.material = (mesh.material as THREE.Material).clone();
-
-          if (mesh.material instanceof THREE.MeshStandardMaterial) {
-            mesh.material.needsUpdate = true;
+          if (mesh.material) {
+            const material = mesh.material as THREE.Material;
+            material.needsUpdate = true;
           }
         }
       });
@@ -60,21 +68,19 @@ export default function Robot() {
     <div className="w-full h-full">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 50 }}
-        gl={{
+        gl={{ 
           antialias: true,
           alpha: true,
-          preserveDrawingBuffer: false,
+          preserveDrawingBuffer: true,
+          powerPreference: "high-performance"
         }}
-        onCreated={({ gl }) => {
-          gl.setClearColor(0x000000, 0);
-        }}
+        dpr={[1, 2]}
       >
+        <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />
         <pointLight position={[-5, 5, 5]} intensity={0.5} />
-        <Suspense fallback={null}>
-          <RobotModel />
-        </Suspense>
+        <RobotModel />
       </Canvas>
     </div>
   );
