@@ -11,7 +11,7 @@ function RobotModel() {
 
   useEffect(() => {
     if (robotRef.current) {
-      const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0.5);
+      const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 2.0);
       
       robotRef.current.traverse((child) => {
         if (!headRef.current) {
