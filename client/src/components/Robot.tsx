@@ -117,7 +117,6 @@ export default function Robot() {
           gl.setClearColor(0x000000, 0);
         }}
       >
-        <color attach="background" args={['transparent']} />
         
         <ambientLight intensity={1.2} />
         <directionalLight position={[3, 4, 3]} intensity={1.5} castShadow />
