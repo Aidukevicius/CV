@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { useRef, useEffect, Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -7,7 +7,6 @@ function RobotModel() {
   const { scene } = useGLTF('/models/robot/scene.gltf');
   const robotRef = useRef<THREE.Group>(null);
   const mousePos = useRef({ x: 0, y: 0 });
-  const { camera } = useThree();
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -52,10 +51,6 @@ function RobotModel() {
   return (
     <group ref={robotRef}>
       <primitive object={scene} scale={2.5} position={[0, -1.5, 0]} />
-      <mesh position={[0, 0, -5]} visible={false}>
-        <planeGeometry args={[100, 100]} />
-        <meshBasicMaterial side={THREE.DoubleSide} colorWrite={false} />
-      </mesh>
     </group>
   );
 }
@@ -65,11 +60,10 @@ export default function Robot() {
     <div className="w-full h-full">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 50 }}
-        gl={{ 
+        gl={{
           antialias: true,
           alpha: true,
           preserveDrawingBuffer: false,
-          powerPreference: "high-performance"
         }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
@@ -78,7 +72,9 @@ export default function Robot() {
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} />
         <pointLight position={[-5, 5, 5]} intensity={0.5} />
-        <RobotModel />
+        <Suspense fallback={null}>
+          <RobotModel />
+        </Suspense>
       </Canvas>
     </div>
   );
