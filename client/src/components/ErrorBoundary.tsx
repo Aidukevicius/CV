@@ -22,14 +22,16 @@ export class ThreeErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Three.js Error:', error);
-    console.error('Error Info:', errorInfo);
-    console.error('Component Stack:', errorInfo.componentStack);
+    // Silently catch errors - no logging for decorative elements
   }
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
+      if (this.props.fallback !== undefined) {
+        return this.props.fallback;
+      }
+      
+      return (
         <div className="w-full h-full flex items-center justify-center bg-black text-white p-8">
           <div className="max-w-md">
             <h2 className="text-xl font-bold mb-4">3D Scene Error</h2>

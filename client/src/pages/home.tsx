@@ -57,10 +57,10 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Robot decoration at bottom center - temporarily disabled due to WebGL issues */}
-      {/* <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-80 h-80 pointer-events-none z-30">
+      {/* Robot decoration at bottom center */}
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-80 h-80 pointer-events-none z-30">
         <Robot />
-      </div> */}
+      </div>
 
       {/* Fullscreen Game Modal */}
       {gameFullscreen && (
