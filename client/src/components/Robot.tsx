@@ -1,8 +1,9 @@
 
-import { useRef } from 'react';
+import { useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import { ThreeErrorBoundary } from './ErrorBoundary';
 
 function RobotModel() {
   const { scene } = useGLTF('/models/robot/scene.gltf');
@@ -37,23 +38,35 @@ function RobotModel() {
   );
 }
 
+function LoadingFallback() {
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-black">
+      <div className="text-white text-sm">Loading 3D model...</div>
+    </div>
+  );
+}
+
 export default function Robot() {
   return (
-    <div className="w-full h-full" style={{ background: '#000000' }}>
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 50 }}
-        gl={{
-          antialias: true,
-          alpha: false,
-        }}
-        dpr={[1, 1.5]}
-      >
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 5, 5]} intensity={0.8} />
-        <pointLight position={[-5, 5, 5]} intensity={0.5} />
-        <RobotModel />
-      </Canvas>
-    </div>
+    <ThreeErrorBoundary>
+      <div className="w-full h-full" style={{ background: '#000000' }}>
+        <Suspense fallback={<LoadingFallback />}>
+          <Canvas
+            camera={{ position: [0, 0, 5], fov: 50 }}
+            gl={{
+              antialias: true,
+              alpha: false,
+            }}
+            dpr={[1, 1.5]}
+          >
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[5, 5, 5]} intensity={0.8} />
+            <pointLight position={[-5, 5, 5]} intensity={0.5} />
+            <RobotModel />
+          </Canvas>
+        </Suspense>
+      </div>
+    </ThreeErrorBoundary>
   );
 }
 
