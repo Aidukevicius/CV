@@ -1,44 +1,20 @@
-import { useRef, useState, useEffect, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useRef, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
 function RobotModel() {
   const { scene } = useGLTF('/models/robot/scene.gltf');
   const robotRef = useRef<THREE.Group>(null);
-  const headRef = useRef<THREE.Object3D | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (robotRef.current) {
-      const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0.5);
-      
-      robotRef.current.traverse((child) => {
-        if (!headRef.current) {
-          if (child.name === 'Bone001_0117') {
-            headRef.current = child;
-          }
-        }
-        
-        if ((child as THREE.Mesh).isMesh) {
-          const mesh = child as THREE.Mesh;
-          if (mesh.material) {
-            const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-            materials.forEach(mat => {
-              mat.clippingPlanes = [clippingPlane];
-              mat.clipShadows = true;
-            });
-          }
-        }
-      });
-    }
-  }, [scene]);
+  const mousePos = useRef({ x: 0, y: 0 });
+  const { camera } = useThree();
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      const x = (event.clientX / window.innerWidth) * 2 - 1;
-      const y = (event.clientY / window.innerHeight) * 2 - 1;
-      setMousePosition({ x, y });
+      mousePos.current = {
+        x: (event.clientX / window.innerWidth) * 2 - 1,
+        y: -(event.clientY / window.innerHeight) * 2 + 1,
+      };
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -46,86 +22,63 @@ function RobotModel() {
   }, []);
 
   useFrame(() => {
-    if (headRef.current) {
-      const limitY = 0.5;
-      const limitX = 0.25;
-      
-      const targetRotationY = THREE.MathUtils.clamp(
-        mousePosition.x * 0.5,
-        -limitY,
-        limitY
-      );
-      const targetRotationX = THREE.MathUtils.clamp(
-        mousePosition.y * 0.3,
-        -limitX,
-        limitX
-      );
+    if (!robotRef.current) return;
 
-      headRef.current.rotation.y = THREE.MathUtils.lerp(
-        headRef.current.rotation.y,
-        targetRotationY,
-        0.08
-      );
-      
-      headRef.current.rotation.x = THREE.MathUtils.lerp(
-        headRef.current.rotation.x,
-        targetRotationX,
-        0.08
-      );
+    const head = robotRef.current.getObjectByName('Head');
+    if (head) {
+      const targetX = mousePos.current.x * 0.3;
+      const targetY = mousePos.current.y * 0.2;
+
+      head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, targetX, 0.1);
+      head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, targetY, 0.1);
     }
   });
 
+  useEffect(() => {
+    if (scene) {
+      scene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          mesh.material = (mesh.material as THREE.Material).clone();
+
+          if (mesh.material instanceof THREE.MeshStandardMaterial) {
+            mesh.material.needsUpdate = true;
+          }
+        }
+      });
+    }
+  }, [scene]);
+
   return (
     <group ref={robotRef}>
-      <primitive object={scene} scale={3} position={[0, -5.5, 0]} />
+      <primitive object={scene} scale={2.5} position={[0, -1.5, 0]} />
+      <mesh position={[0, 0, -5]} visible={false}>
+        <planeGeometry args={[100, 100]} />
+        <meshBasicMaterial side={THREE.DoubleSide} colorWrite={false} />
+      </mesh>
     </group>
   );
 }
 
 export default function Robot() {
-  const [webglSupported, setWebglSupported] = useState(true);
-
-  useEffect(() => {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (!gl) {
-      setWebglSupported(false);
-    }
-  }, []);
-
-  if (!webglSupported) {
-    return null;
-  }
-
   return (
-    <div 
-      className="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 pointer-events-none"
-      data-testid="robot-decoration"
-      style={{ width: '400px', height: '400px', margin: 0, padding: 0 }}
-    >
+    <div className="w-full h-full">
       <Canvas
-        camera={{
-          position: [0, 1, 5],
-          fov: 45,
-        }}
+        camera={{ position: [0, 0, 5], fov: 50 }}
         gl={{ 
           antialias: true,
-          localClippingEnabled: true,
-          alpha: true
+          alpha: true,
+          preserveDrawingBuffer: false,
+          powerPreference: "high-performance"
         }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
         }}
       >
-        
-        <ambientLight intensity={1.2} />
-        <directionalLight position={[3, 4, 3]} intensity={1.5} castShadow />
-        <directionalLight position={[-3, 2, -2]} intensity={0.8} />
-        <pointLight position={[0, 2, 2]} intensity={1.0} />
-        
-        <Suspense fallback={null}>
-          <RobotModel />
-        </Suspense>
+        <ambientLight intensity={0.3} color="#66ff66" />
+        <directionalLight position={[5, 5, 5]} intensity={0.5} color="#66ff66" />
+        <pointLight position={[-5, 5, 5]} intensity={0.3} color="#66ff66" />
+        <RobotModel />
       </Canvas>
     </div>
   );
