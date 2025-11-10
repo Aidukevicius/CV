@@ -27,7 +27,7 @@ export default function Home() {
             <div className="w-full flex-1 flex items-center justify-center">
               <BugShooterGame />
             </div>
-            <div className="w-full h-80 flex-shrink-0">
+            <div className="w-full h-64 flex-shrink-0">
               <Robot />
             </div>
           </div>
@@ -63,7 +63,7 @@ export default function Home() {
               </div>
               <BugShooterGame />
             </div>
-            <div className="w-full h-64 flex-shrink-0">
+            <div className="w-full h-48 flex-shrink-0">
               <Robot />
             </div>
           </div>
