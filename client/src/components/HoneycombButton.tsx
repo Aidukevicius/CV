@@ -26,10 +26,10 @@ export default function HoneycombButton({
 }: HoneycombButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   
-  const baseScale = size === "sm" ? 0.5 : 0.9;
-  const width = 98 * baseScale;
-  const height = 111 * baseScale;
-  const hoverScale = isHovered && imageUrl ? 2.2 : 1;
+  const baseScale = size === "sm" ? 0.7 : 1.3;
+  const scale = isHovered && imageUrl ? baseScale * 1.8 : baseScale;
+  const width = 98 * scale;
+  const height = 111 * scale;
   
   // Calculate transform origin for pop direction
   let transformOrigin = 'center center';
@@ -48,24 +48,17 @@ export default function HoneycombButton({
 
   const content = (
     <div 
-      className="relative inline-block cursor-pointer overflow-hidden"
+      className="relative inline-block cursor-pointer transition-all duration-500 ease-out"
       style={{
         width: `${width}px`,
         height: `${height}px`,
-        clipPath: `polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)`,
+        zIndex: isHovered ? 50 : 1,
+        transformOrigin: transformOrigin
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       data-testid={testId}
     >
-      <div
-        className="absolute inset-0 transition-all duration-500 ease-out"
-        style={{
-          transform: `scale(${hoverScale})`,
-          transformOrigin: 'center center',
-          zIndex: isHovered ? 50 : 1,
-        }}
-      >
       <svg
         width={width}
         height={height}
@@ -144,7 +137,6 @@ export default function HoneycombButton({
           {description && <div className="text-xs text-white/90 leading-tight z-10">{description}</div>}
         </div>
       )}
-      </div>
     </div>
   );
 
