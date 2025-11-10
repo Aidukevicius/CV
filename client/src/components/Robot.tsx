@@ -97,10 +97,11 @@ export default function Robot() {
         }}
         style={{ background: 'transparent' }}
       >
-        <ambientLight intensity={1.2} />
-        <directionalLight position={[3, 4, 3]} intensity={1.5} castShadow />
-        <directionalLight position={[-3, 2, -2]} intensity={0.8} />
-        <pointLight position={[0, 2, 2]} intensity={1.0} />
+        <ambientLight intensity={2.0} />
+        <directionalLight position={[3, 4, 3]} intensity={2.5} castShadow />
+        <directionalLight position={[-3, 2, -2]} intensity={1.5} />
+        <pointLight position={[0, 2, 2]} intensity={1.8} />
+        <pointLight position={[2, 3, -1]} intensity={1.2} />
         
         <Suspense fallback={null}>
           <RobotModel />

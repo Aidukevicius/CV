@@ -23,7 +23,7 @@ export default function Home() {
             <BugShooterGame />
           </div>
           
-          <div className="col-span-4 overflow-y-auto" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="col-span-4 overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <ProjectsGrid />
           </div>
         </div>
