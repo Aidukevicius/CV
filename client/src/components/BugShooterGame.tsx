@@ -566,11 +566,11 @@ export default function BugShooterGame() {
       ctx.fillStyle = "#ffffff";
       ctx.font = "11px 'Space Mono', monospace";
       ctx.textAlign = "left";
-      ctx.fillText(`SCORE: ${score}`, 8, 38);
-      ctx.fillText(`WAVE: ${wave}`, 8, 54);
+      ctx.fillText(`SCORE: ${score}`, 8, 50);
+      ctx.fillText(`WAVE: ${wave}`, 8, 66);
       if (combo > 0) {
         ctx.fillStyle = combo >= 3 ? "#10b981" : "#fbbf24";
-        ctx.fillText(`COMBO: x${combo}${combo >= 3 ? ' ✓' : ''}`, 8, 70);
+        ctx.fillText(`COMBO: x${combo}${combo >= 3 ? ' ✓' : ''}`, 8, 82);
       }
 
       if (rapidFireRef.current > now) {
