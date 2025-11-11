@@ -29,7 +29,7 @@ export default function HoneycombButton({
   const baseScale = size === "sm" ? 0.5 : 0.9;
   const width = 98 * baseScale;
   const height = 111 * baseScale;
-  const hoverScale = isHovered ? (imageUrl ? 2.2 : 1.08) : 1;
+  const hoverScale = isHovered ? (imageUrl ? 2.8 : 1.12) : 1;
   
   // Calculate transform origin for pop direction
   let transformOrigin = 'center center';
@@ -37,8 +37,8 @@ export default function HoneycombButton({
     transformOrigin = 'center bottom';
   } else if (popDirection === 'center') {
     // Pop toward center means transform origin is away from center
-    const originX = 50 - Math.cos(angle) * 100; // Opposite direction
-    const originY = 50 - Math.sin(angle) * 100;
+    const originX = 50 + Math.cos(angle) * 150; // Opposite direction for outward origin
+    const originY = 50 + Math.sin(angle) * 150;
     transformOrigin = `${originX}% ${originY}%`;
   }
   
@@ -168,7 +168,7 @@ export default function HoneycombButton({
 
       {(description || imageUrl) && isHovered && (
         <div 
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 py-4 transition-all duration-300"
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 py-6 transition-all duration-300"
           style={{
             opacity: 1,
             animation: 'fadeIn 0.3s ease-out'
@@ -176,16 +176,16 @@ export default function HoneycombButton({
         >
           {title && (
             <div 
-              className="text-base font-bold text-white mb-2 z-10"
-              style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)' }}
+              className="text-lg font-bold text-white mb-3 z-10 leading-tight"
+              style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.9)' }}
             >
               {title}
             </div>
           )}
           {description && (
             <div 
-              className="text-xs text-white leading-tight z-10"
-              style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)' }}
+              className="text-sm text-white leading-relaxed z-10 max-w-[90%]"
+              style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.9)' }}
             >
               {description}
             </div>
