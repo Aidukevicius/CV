@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Pause, Play, RotateCcw } from "lucide-react";
 
 interface Bug {
   x: number;
@@ -39,14 +41,20 @@ const SKILLS = [
   "Git", "CI/CD", "TailwindCSS", "Next.js", "Express"
 ];
 
+const CANVAS_WIDTH = 500;
+const CANVAS_HEIGHT = 580;
+
 export default function BugShooterGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [score, setScore] = useState(0);
   const [collectedSkills, setCollectedSkills] = useState<string[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
-  const [health, setHealth] = useState(100);
+  const [lives, setLives] = useState(3);
   const [combo, setCombo] = useState(0);
   const [wave, setWave] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
   
   const playerXRef = useRef(250);
   const bugsRef = useRef<Bug[]>([]);
@@ -61,19 +69,66 @@ export default function BugShooterGame() {
   const rapidFireRef = useRef(0);
   const multiShotRef = useRef(false);
   const shieldRef = useRef(0);
+  const invulnerabilityRef = useRef(0);
+  const scaleRef = useRef(1);
+
+  const resetGame = () => {
+    setScore(0);
+    setCollectedSkills([]);
+    setLives(3);
+    setCombo(0);
+    setWave(1);
+    setGameOver(false);
+    setIsPaused(false);
+    playerXRef.current = 250;
+    bugsRef.current = [];
+    bulletsRef.current = [];
+    powerUpsRef.current = [];
+    particlesRef.current = [];
+    lastShotRef.current = 0;
+    comboTimerRef.current = 0;
+    waveTimerRef.current = Date.now();
+    rapidFireRef.current = 0;
+    multiShotRef.current = false;
+    shieldRef.current = 0;
+    invulnerabilityRef.current = 0;
+  };
+
+  const startGame = () => {
+    resetGame();
+    setGameStarted(true);
+    waveTimerRef.current = Date.now();
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const updateScale = () => {
+      const containerWidth = container.clientWidth;
+      scaleRef.current = Math.min(containerWidth / CANVAS_WIDTH, 1.2);
+    };
+
+    const resizeObserver = new ResizeObserver(updateScale);
+    resizeObserver.observe(container);
+    updateScale();
+
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (gameOver) return;
       keysRef.current.add(e.key.toLowerCase());
       if (e.key === " " || e.key === "Spacebar") {
         e.preventDefault();
-        shoot();
+        if (!isPaused) shoot();
+      }
+      if (e.key.toLowerCase() === "p") {
+        e.preventDefault();
+        if (gameStarted && !gameOver) {
+          setIsPaused(p => !p);
+        }
       }
     };
 
@@ -82,18 +137,16 @@ export default function BugShooterGame() {
     };
 
     const handleClick = () => {
+      if (gameOver) return;
       if (!gameStarted) {
-        setGameStarted(true);
-      } else {
+        startGame();
+      } else if (!isPaused) {
         shoot();
       }
     };
 
     const shoot = () => {
-      if (!gameStarted) {
-        setGameStarted(true);
-        return;
-      }
+      if (!gameStarted || isPaused || gameOver) return;
       
       const now = Date.now();
       const fireRate = rapidFireRef.current > now ? 100 : 200;
@@ -102,37 +155,37 @@ export default function BugShooterGame() {
 
       if (multiShotRef.current) {
         bulletsRef.current.push(
-          { x: playerXRef.current - 15, y: 540, vy: -10 },
-          { x: playerXRef.current, y: 540, vy: -10 },
-          { x: playerXRef.current + 15, y: 540, vy: -10 }
+          { x: playerXRef.current - 15, y: 540, vy: -12 },
+          { x: playerXRef.current, y: 540, vy: -12 },
+          { x: playerXRef.current + 15, y: 540, vy: -12 }
         );
       } else {
         bulletsRef.current.push({
           x: playerXRef.current,
           y: 540,
-          vy: -10,
+          vy: -12,
         });
       }
     };
 
     const spawnBug = (waveLevel: number) => {
       const x = Math.random() * 460 + 20;
-      const speedMultiplier = 1 + (waveLevel - 1) * 0.1;
+      const speedMultiplier = Math.pow(1.15, waveLevel - 1);
 
       bugsRef.current.push({
         x,
         y: -30,
-        vx: (Math.random() - 0.5) * 1.5 * speedMultiplier,
-        vy: (0.8 + Math.random() * 1.2) * speedMultiplier,
+        vx: (Math.random() - 0.5) * 2 * speedMultiplier,
+        vy: (1.5 + Math.random() * 1.5) * speedMultiplier,
         size: 18 + Math.random() * 12,
-        health: Math.min(1 + Math.floor(waveLevel / 3), 3),
+        health: Math.min(1 + Math.floor(waveLevel / 2), 4),
         skill: SKILLS[Math.floor(Math.random() * SKILLS.length)],
         rotation: Math.random() * Math.PI * 2,
       });
     };
 
     const spawnPowerUp = (x: number, y: number) => {
-      if (Math.random() < 0.3) {
+      if (Math.random() < 0.25) {
         const types: ('rapidFire' | 'shield' | 'multiShot')[] = ['rapidFire', 'shield', 'multiShot'];
         powerUpsRef.current.push({
           x,
@@ -156,7 +209,7 @@ export default function BugShooterGame() {
       }
     };
 
-    const drawRobot = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, health: number) => {
+    const drawBug = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, health: number) => {
       ctx.save();
       ctx.translate(x, y);
       
@@ -198,8 +251,9 @@ export default function BugShooterGame() {
       const size = 22;
       const now = Date.now();
       
-      if (shieldRef.current > now) {
-        ctx.strokeStyle = "#22d3ee";
+      if (shieldRef.current > now || invulnerabilityRef.current > now) {
+        const color = invulnerabilityRef.current > now ? "#ef4444" : "#22d3ee";
+        ctx.strokeStyle = color;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(x, y, size * 1.5, 0, Math.PI * 2);
@@ -227,25 +281,41 @@ export default function BugShooterGame() {
       ctx.stroke();
     };
 
+    const loseLife = (now: number) => {
+      if (invulnerabilityRef.current > now) return;
+      
+      setLives(l => {
+        const newLives = l - 1;
+        if (newLives <= 0) {
+          setGameOver(true);
+        }
+        return Math.max(0, newLives);
+      });
+      setCombo(0);
+      comboTimerRef.current = 0;
+      invulnerabilityRef.current = now + 2000;
+      createExplosion(playerXRef.current, 560, "#ef4444");
+    };
+
     const gameLoop = () => {
       if (!ctx || !canvas) return;
       const now = Date.now();
 
       ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, 500, 580);
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
       ctx.strokeStyle = "#0a0a0a";
       ctx.lineWidth = 1;
-      for (let i = 0; i < 500; i += 25) {
+      for (let i = 0; i < CANVAS_WIDTH; i += 25) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
-        ctx.lineTo(i, 580);
+        ctx.lineTo(i, CANVAS_HEIGHT);
         ctx.stroke();
       }
-      for (let i = 0; i < 580; i += 25) {
+      for (let i = 0; i < CANVAS_HEIGHT; i += 25) {
         ctx.beginPath();
         ctx.moveTo(0, i);
-        ctx.lineTo(500, i);
+        ctx.lineTo(CANVAS_WIDTH, i);
         ctx.stroke();
       }
 
@@ -258,16 +328,75 @@ export default function BugShooterGame() {
         ctx.fillStyle = "#888888";
         ctx.fillText("Click or SPACE to start", 250, 290);
         ctx.fillText("A/D or ← → to move • Space/Click to shoot", 250, 310);
+        ctx.fillText("P to pause", 250, 330);
         animationFrameRef.current = requestAnimationFrame(gameLoop);
         return;
       }
 
-      if (now - waveTimerRef.current > 20000) {
+      if (gameOver) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = "#ef4444";
+        ctx.font = "24px 'Space Mono', monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("GAME OVER", 250, 250);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "14px 'Space Mono', monospace";
+        ctx.fillText(`Final Score: ${score}`, 250, 285);
+        ctx.fillText(`Skills Collected: ${collectedSkills.length}/${SKILLS.length}`, 250, 310);
+        ctx.font = "12px 'Space Mono', monospace";
+        ctx.fillStyle = "#888888";
+        ctx.fillText("Click 'Restart' to play again", 250, 345);
+        animationFrameRef.current = requestAnimationFrame(gameLoop);
+        return;
+      }
+
+      if (isPaused) {
+        drawPlayer(ctx, playerXRef.current);
+
+        ctx.fillStyle = "#fbbf24";
+        ctx.shadowColor = "#fbbf24";
+        ctx.shadowBlur = 6;
+        bulletsRef.current.forEach(bullet => {
+          ctx.fillRect(bullet.x - 2, bullet.y - 6, 4, 12);
+        });
+        ctx.shadowBlur = 0;
+
+        powerUpsRef.current.forEach(powerUp => {
+          const color = powerUp.type === 'rapidFire' ? '#fbbf24' : powerUp.type === 'shield' ? '#22d3ee' : '#a855f7';
+          ctx.fillStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(powerUp.x, powerUp.y, 8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        });
+
+        bugsRef.current.forEach(bug => {
+          drawBug(ctx, bug.x, bug.y, bug.size, bug.health);
+        });
+
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "20px 'Space Mono', monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("PAUSED", 250, 290);
+        ctx.font = "12px 'Space Mono', monospace";
+        ctx.fillStyle = "#888888";
+        ctx.fillText("Press P or click Pause button to resume", 250, 320);
+        
+        animationFrameRef.current = requestAnimationFrame(gameLoop);
+        return;
+      }
+
+      if (now - waveTimerRef.current > 12000) {
         setWave(w => w + 1);
         waveTimerRef.current = now;
       }
 
-      const speed = 5;
+      const speed = 6;
       if (keysRef.current.has("a") || keysRef.current.has("arrowleft")) {
         playerXRef.current = Math.max(25, playerXRef.current - speed);
       }
@@ -329,9 +458,7 @@ export default function BugShooterGame() {
         if (bug.y > 580) {
           bugsRef.current.splice(i, 1);
           if (shieldRef.current < now) {
-            setHealth(h => Math.max(0, h - 10));
-            setCombo(0);
-            comboTimerRef.current = 0;
+            loseLife(now);
           }
         }
 
@@ -346,16 +473,20 @@ export default function BugShooterGame() {
             createExplosion(bug.x, bug.y, "#fbbf24");
 
             if (bug.health <= 0) {
-              const comboBonus = Math.floor(combo / 5) * 5;
-              setScore(s => s + 10 + comboBonus);
-              setCombo(c => c + 1);
+              const newCombo = combo + 1;
+              const comboBonus = Math.floor(newCombo / 5) * 5;
+              setScore(s => s + 15 + comboBonus);
+              setCombo(newCombo);
               comboTimerRef.current = now;
-              setCollectedSkills(skills => {
-                if (!skills.includes(bug.skill)) {
-                  return [...skills, bug.skill];
-                }
-                return skills;
-              });
+              
+              if (newCombo >= 3) {
+                setCollectedSkills(skills => {
+                  if (!skills.includes(bug.skill)) {
+                    return [...skills, bug.skill];
+                  }
+                  return skills;
+                });
+              }
               spawnPowerUp(bug.x, bug.y);
               createExplosion(bug.x, bug.y, "#ef4444");
               bugsRef.current.splice(i, 1);
@@ -368,7 +499,9 @@ export default function BugShooterGame() {
         setCombo(0);
       }
 
-      if (Math.random() < 0.015 + (wave * 0.002) && bugsRef.current.length < 6 + wave) {
+      const spawnChance = 0.025 + (wave * 0.004);
+      const maxBugs = 8 + Math.floor(wave * 1.5);
+      if (Math.random() < spawnChance && bugsRef.current.length < maxBugs) {
         spawnBug(wave);
       }
 
@@ -401,7 +534,7 @@ export default function BugShooterGame() {
       });
 
       bugsRef.current.forEach(bug => {
-        drawRobot(ctx, bug.x, bug.y, bug.size, bug.health);
+        drawBug(ctx, bug.x, bug.y, bug.size, bug.health);
       });
 
       ctx.fillStyle = "#ffffff";
@@ -410,18 +543,19 @@ export default function BugShooterGame() {
       ctx.fillText(`SCORE: ${score}`, 8, 16);
       ctx.fillText(`WAVE: ${wave}`, 8, 32);
       if (combo > 0) {
-        ctx.fillStyle = "#fbbf24";
-        ctx.fillText(`COMBO: x${combo}`, 8, 48);
+        ctx.fillStyle = combo >= 3 ? "#10b981" : "#fbbf24";
+        ctx.fillText(`COMBO: x${combo}${combo >= 3 ? ' ✓' : ''}`, 8, 48);
       }
       
-      const healthColor = health > 60 ? "#10b981" : health > 30 ? "#f59e0b" : "#ef4444";
-      ctx.fillStyle = "#1a1a1a";
-      ctx.fillRect(420, 8, 72, 8);
-      ctx.fillStyle = healthColor;
-      ctx.fillRect(420, 8, health * 0.72, 8);
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "right";
-      ctx.fillText("HP", 410, 16);
+      for (let i = 0; i < lives; i++) {
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.moveTo(465 - i * 20, 14);
+        ctx.lineTo(465 - i * 20 - 6, 20);
+        ctx.lineTo(465 - i * 20 + 6, 20);
+        ctx.closePath();
+        ctx.fill();
+      }
 
       if (rapidFireRef.current > now) {
         ctx.fillStyle = "#fbbf24";
@@ -456,29 +590,58 @@ export default function BugShooterGame() {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      resizeObserver.disconnect();
     };
-  }, [gameStarted]);
+  }, [gameStarted, isPaused, gameOver, score, combo, wave, lives, collectedSkills.length]);
 
   return (
-    <div className="flex flex-col items-center gap-4 p-6 w-full max-w-2xl mx-auto">
+    <div className="flex flex-col items-center gap-3 w-full max-w-2xl mx-auto" ref={containerRef}>
+      <div className="w-full flex items-center justify-between px-2">
+        <h2 className="text-lg font-bold text-foreground">System Defender</h2>
+        <div className="flex gap-2">
+          {gameStarted && !gameOver && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setIsPaused(p => !p)}
+              data-testid="button-pause"
+            >
+              {isPaused ? <Play className="w-4 h-4 mr-1" /> : <Pause className="w-4 h-4 mr-1" />}
+              {isPaused ? "Resume" : "Pause"}
+            </Button>
+          )}
+          {gameOver && (
+            <Button
+              size="sm"
+              variant="default"
+              onClick={startGame}
+              data-testid="button-restart"
+            >
+              <RotateCcw className="w-4 h-4 mr-1" />
+              Restart
+            </Button>
+          )}
+        </div>
+      </div>
+
       <div className="w-full max-w-md mx-auto">
-        <div className="border border-border rounded-md overflow-hidden" style={{ backgroundColor: '#000' }}>
+        <div className="border border-border rounded-md overflow-hidden shadow-lg" style={{ backgroundColor: '#000' }}>
           <canvas
             ref={canvasRef}
-            width={500}
-            height={580}
+            width={CANVAS_WIDTH}
+            height={CANVAS_HEIGHT}
             className="w-full h-auto cursor-crosshair"
             data-testid="canvas-game"
           />
         </div>
 
-        <div className="mt-4">
+        <div className="mt-3">
           <h3 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
             Skills Unlocked ({collectedSkills.length}/{SKILLS.length})
           </h3>
           {collectedSkills.length === 0 ? (
             <p className="text-xs text-muted-foreground">
-              Eliminate bugs to unlock skills...
+              Get 3+ combo to unlock skills...
             </p>
           ) : (
             <div className="flex flex-wrap gap-1.5">

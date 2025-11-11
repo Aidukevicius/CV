@@ -22,8 +22,8 @@ export default function Home() {
           </div>
           
           {/* Center Column - Game */}
-          <div className="flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full flex items-center justify-center">
+          <div className="flex items-start justify-center relative py-8" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full flex items-start justify-center">
               <BugShooterGame />
             </div>
           </div>
@@ -44,8 +44,8 @@ export default function Home() {
           </div>
           
           {/* Right Column - Game */}
-          <div className="h-screen flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full flex items-center justify-center">
+          <div className="h-screen flex items-start justify-center relative py-8" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full flex items-start justify-center">
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
