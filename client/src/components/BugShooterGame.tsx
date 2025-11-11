@@ -538,19 +538,29 @@ export default function BugShooterGame() {
       });
 
       for (let i = 0; i < lives; i++) {
-        const x = 8 + i * 18;
-        const y = 14;
+        const x = 10 + i * 20;
+        const y = 16;
+        const size = 8;
+        
         ctx.fillStyle = "#ef4444";
+        ctx.shadowColor = "#ef4444";
+        ctx.shadowBlur = 4;
         ctx.beginPath();
-        ctx.moveTo(x, y + 3);
-        ctx.bezierCurveTo(x, y, x - 4, y - 3, x - 7, y - 3);
-        ctx.bezierCurveTo(x - 10, y - 3, x - 10, y + 1, x - 10, y + 1);
-        ctx.bezierCurveTo(x - 10, y + 5, x - 7, y + 8, x, y + 12);
-        ctx.bezierCurveTo(x + 7, y + 8, x + 10, y + 5, x + 10, y + 1);
-        ctx.bezierCurveTo(x + 10, y + 1, x + 10, y - 3, x + 7, y - 3);
-        ctx.bezierCurveTo(x + 4, y - 3, x, y, x, y + 3);
+        
+        // Left curve of heart
+        ctx.moveTo(x, y + size * 0.3);
+        ctx.bezierCurveTo(x, y - size * 0.1, x - size * 0.5, y - size * 0.5, x - size * 0.9, y - size * 0.5);
+        ctx.bezierCurveTo(x - size * 1.3, y - size * 0.5, x - size * 1.3, y + size * 0.2, x - size * 1.3, y + size * 0.2);
+        ctx.bezierCurveTo(x - size * 1.3, y + size * 0.7, x - size * 0.9, y + size * 1.1, x, y + size * 1.6);
+        
+        // Right curve of heart
+        ctx.bezierCurveTo(x + size * 0.9, y + size * 1.1, x + size * 1.3, y + size * 0.7, x + size * 1.3, y + size * 0.2);
+        ctx.bezierCurveTo(x + size * 1.3, y + size * 0.2, x + size * 1.3, y - size * 0.5, x + size * 0.9, y - size * 0.5);
+        ctx.bezierCurveTo(x + size * 0.5, y - size * 0.5, x, y - size * 0.1, x, y + size * 0.3);
+        
         ctx.closePath();
         ctx.fill();
+        ctx.shadowBlur = 0;
       }
       
       ctx.fillStyle = "#ffffff";
