@@ -596,38 +596,35 @@ export default function BugShooterGame() {
 
   return (
     <div className="flex flex-col items-center gap-2 w-full max-w-2xl mx-auto" ref={containerRef}>
-      <div className="w-full flex items-center justify-end px-2">
-        <div className="flex gap-2">
-          {gameStarted && !gameOver && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setIsPaused(p => !p)}
-              data-testid="button-pause"
-            >
-              {isPaused ? <Play className="w-4 h-4 mr-1" /> : <Pause className="w-4 h-4 mr-1" />}
-              {isPaused ? "Resume" : "Pause"}
-            </Button>
-          )}
-          {gameOver && (
-            <Button
-              size="sm"
-              variant="default"
-              onClick={startGame}
-              data-testid="button-restart"
-            >
-              <RotateCcw className="w-4 h-4 mr-1" />
-              Restart
-            </Button>
-          )}
-        </div>
-      </div>
-
       <div className="w-full max-w-md mx-auto">
         <p className="text-xs text-muted-foreground text-center mb-2 font-mono">
           Eliminate the bugs to unlock my technical skills
         </p>
-        <div className="border border-border rounded-md overflow-hidden shadow-lg" style={{ backgroundColor: '#000' }}>
+        <div className="border border-border rounded-md overflow-hidden shadow-lg relative" style={{ backgroundColor: '#000' }}>
+          {gameStarted && !gameOver && (
+            <button
+              onClick={() => setIsPaused(p => !p)}
+              data-testid="button-pause"
+              className="absolute top-2 right-2 z-10 bg-black/50 hover:bg-black/70 text-white rounded p-1.5 transition-colors"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            >
+              {isPaused ? (
+                <Play className="w-4 h-4" />
+              ) : (
+                <Pause className="w-4 h-4" />
+              )}
+            </button>
+          )}
+          {gameOver && (
+            <button
+              onClick={startGame}
+              data-testid="button-restart"
+              className="absolute top-2 right-2 z-10 bg-black/50 hover:bg-black/70 text-white rounded p-1.5 transition-colors"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
           <canvas
             ref={canvasRef}
             width={CANVAS_WIDTH}
