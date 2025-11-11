@@ -60,7 +60,7 @@ const SOCIAL_LINKS = [
 
 function ProjectCard({ title, imageUrl, delay }: { title: string; imageUrl: string; delay: number }) {
   const createHexagonPath = () => {
-    const size = 60;
+    const size = 35;
     const points: [number, number][] = [];
     for (let i = 0; i < 6; i++) {
       const angle = (Math.PI / 3) * i - Math.PI / 6;
@@ -93,14 +93,14 @@ function ProjectCard({ title, imageUrl, delay }: { title: string; imageUrl: stri
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative">
           <svg
-            width="120"
-            height="120"
-            viewBox="0 0 120 120"
+            width="70"
+            height="70"
+            viewBox="0 0 70 70"
             className="drop-shadow-2xl"
           >
             <defs>
               <filter id={`glow-${title}`}>
-                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
                 <feMerge>
                   <feMergeNode in="coloredBlur"/>
                   <feMergeNode in="SourceGraphic"/>
@@ -120,7 +120,7 @@ function ProjectCard({ title, imageUrl, delay }: { title: string; imageUrl: stri
               d={createHexagonPath()}
               fill="none"
               stroke="white"
-              strokeWidth="2"
+              strokeWidth="1.5"
               className="transition-all duration-300"
               style={{ filter: `url(#glow-${title})` }}
             />
@@ -129,11 +129,11 @@ function ProjectCard({ title, imageUrl, delay }: { title: string; imageUrl: stri
           {/* Title text */}
           <div className="absolute inset-0 flex items-center justify-center">
             <p 
-              className="text-white font-bold text-center px-4 text-sm transition-all duration-300 group-hover:scale-105"
+              className="text-white font-semibold text-center px-2 text-[10px] transition-all duration-300 group-hover:scale-105"
               style={{ 
                 textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
-                maxWidth: '100px',
-                lineHeight: '1.2'
+                maxWidth: '55px',
+                lineHeight: '1.1'
               }}
             >
               {title}
