@@ -368,15 +368,19 @@ export default function BugShooterGame() {
 
       if (!gameStarted) {
         ctx.fillStyle = "#ffffff";
-        ctx.font = "20px 'Space Mono', monospace";
+        ctx.font = "22px 'Space Mono', monospace";
         ctx.textAlign = "center";
-        ctx.fillText("SYSTEM DEFENDER", 250, 260);
-        ctx.font = "12px 'Space Mono', monospace";
+        ctx.fillText("SYSTEM DEFENDER", 250, 240);
+        
+        ctx.font = "13px 'Space Mono', monospace";
         ctx.fillStyle = "#888888";
-        ctx.fillText("Click or SPACE to start", 250, 290);
+        ctx.fillText("Click or SPACE to start", 250, 280);
+        
+        ctx.font = "11px 'Space Mono', monospace";
         ctx.fillText("A/D or ← → to move • Space/Click to shoot", 250, 310);
         ctx.fillText("Touch to move & shoot on mobile", 250, 330);
         ctx.fillText("P to pause", 250, 350);
+        
         animationFrameRef.current = requestAnimationFrame(gameLoop);
         return;
       }
