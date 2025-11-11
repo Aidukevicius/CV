@@ -88,7 +88,7 @@ export default function ProjectsGrid() {
 
         <div className="w-full mb-10">
           {/* Honeycomb Grid - Row 1: 2 hexagons */}
-          <div className="flex justify-center gap-1 mb-[-1rem]">
+          <div className="flex justify-center gap-3 mb-[-0.75rem]">
             <div style={{ animation: 'fadeIn 0.6s ease-out 0.1s both' }}>
               <HoneycombButton
                 title={PROJECTS[1].title}
@@ -110,7 +110,7 @@ export default function ProjectsGrid() {
           </div>
 
           {/* Row 2: 3 hexagons (including center) */}
-          <div className="flex justify-center gap-1 mb-[-1rem]">
+          <div className="flex justify-center gap-3 mb-[-0.75rem]">
             <div style={{ animation: 'fadeIn 0.6s ease-out 0.3s both' }}>
               <HoneycombButton
                 title={PROJECTS[3].title}
@@ -141,7 +141,7 @@ export default function ProjectsGrid() {
           </div>
 
           {/* Row 3: 2 hexagons */}
-          <div className="flex justify-center gap-1">
+          <div className="flex justify-center gap-3">
             <div style={{ animation: 'fadeIn 0.6s ease-out 0.5s both' }}>
               <HoneycombButton
                 title={PROJECTS[5].title}

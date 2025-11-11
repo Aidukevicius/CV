@@ -12,28 +12,28 @@ export default function Home() {
 
   return (
     <>
-      <div className="min-h-screen w-full bg-background relative">
+      <div className="min-h-screen w-full bg-background relative overflow-hidden">
         {/* Desktop Layout - 3 equal columns */}
         <div className="hidden lg:grid lg:grid-cols-3 lg:h-screen">
           {/* Left Column - Personal Info */}
-          <div className="overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <div className="w-full">
               <PersonalInfo />
             </div>
           </div>
           
           {/* Center Column - Game + Robot */}
-          <div className="overflow-y-auto flex flex-col items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full h-[60vh] flex items-center justify-center">
               <BugShooterGame />
             </div>
-            <div className="w-full h-80 flex-shrink-0">
+            <div className="w-full h-48 flex-shrink-0">
               <Robot />
             </div>
           </div>
           
           {/* Right Column - Projects */}
-          <div className="overflow-y-auto flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <ProjectsGrid />
           </div>
         </div>
@@ -41,15 +41,15 @@ export default function Home() {
         {/* Tablet Layout - 2 columns + scroll */}
         <div className="hidden md:grid md:grid-cols-2 lg:hidden min-h-screen">
           {/* Left Column - Personal Info */}
-          <div className="h-screen overflow-y-auto flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="h-screen flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <div className="w-full">
               <PersonalInfo />
             </div>
           </div>
           
           {/* Right Column - Game + Robot */}
-          <div className="h-screen overflow-y-auto flex flex-col items-center justify-center" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full flex-1 flex items-center justify-center relative">
+          <div className="h-screen flex flex-col items-center justify-center" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full h-[55vh] flex items-center justify-center relative">
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -63,7 +63,7 @@ export default function Home() {
               </div>
               <BugShooterGame />
             </div>
-            <div className="w-full h-64 flex-shrink-0">
+            <div className="w-full h-40 flex-shrink-0">
               <Robot />
             </div>
           </div>
