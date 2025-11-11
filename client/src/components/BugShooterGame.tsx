@@ -537,24 +537,30 @@ export default function BugShooterGame() {
         drawBug(ctx, bug.x, bug.y, bug.size, bug.health);
       });
 
+      for (let i = 0; i < lives; i++) {
+        const x = 8 + i * 18;
+        const y = 14;
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.moveTo(x, y + 3);
+        ctx.bezierCurveTo(x, y, x - 4, y - 3, x - 7, y - 3);
+        ctx.bezierCurveTo(x - 10, y - 3, x - 10, y + 1, x - 10, y + 1);
+        ctx.bezierCurveTo(x - 10, y + 5, x - 7, y + 8, x, y + 12);
+        ctx.bezierCurveTo(x + 7, y + 8, x + 10, y + 5, x + 10, y + 1);
+        ctx.bezierCurveTo(x + 10, y + 1, x + 10, y - 3, x + 7, y - 3);
+        ctx.bezierCurveTo(x + 4, y - 3, x, y, x, y + 3);
+        ctx.closePath();
+        ctx.fill();
+      }
+      
       ctx.fillStyle = "#ffffff";
       ctx.font = "11px 'Space Mono', monospace";
       ctx.textAlign = "left";
-      ctx.fillText(`SCORE: ${score}`, 8, 16);
-      ctx.fillText(`WAVE: ${wave}`, 8, 32);
+      ctx.fillText(`SCORE: ${score}`, 8, 38);
+      ctx.fillText(`WAVE: ${wave}`, 8, 54);
       if (combo > 0) {
         ctx.fillStyle = combo >= 3 ? "#10b981" : "#fbbf24";
-        ctx.fillText(`COMBO: x${combo}${combo >= 3 ? ' ✓' : ''}`, 8, 48);
-      }
-      
-      for (let i = 0; i < lives; i++) {
-        ctx.fillStyle = "#ef4444";
-        ctx.beginPath();
-        ctx.moveTo(465 - i * 20, 14);
-        ctx.lineTo(465 - i * 20 - 6, 20);
-        ctx.lineTo(465 - i * 20 + 6, 20);
-        ctx.closePath();
-        ctx.fill();
+        ctx.fillText(`COMBO: x${combo}${combo >= 3 ? ' ✓' : ''}`, 8, 70);
       }
 
       if (rapidFireRef.current > now) {
