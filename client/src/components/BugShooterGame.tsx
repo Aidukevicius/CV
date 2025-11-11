@@ -595,9 +595,8 @@ export default function BugShooterGame() {
   }, [gameStarted, isPaused, gameOver, score, combo, wave, lives, collectedSkills.length]);
 
   return (
-    <div className="flex flex-col items-center gap-3 w-full max-w-2xl mx-auto" ref={containerRef}>
-      <div className="w-full flex items-center justify-between px-2">
-        <h2 className="text-lg font-bold text-foreground">System Defender</h2>
+    <div className="flex flex-col items-center gap-2 w-full max-w-2xl mx-auto" ref={containerRef}>
+      <div className="w-full flex items-center justify-end px-2">
         <div className="flex gap-2">
           {gameStarted && !gameOver && (
             <Button
@@ -625,6 +624,9 @@ export default function BugShooterGame() {
       </div>
 
       <div className="w-full max-w-md mx-auto">
+        <p className="text-xs text-muted-foreground text-center mb-2 font-mono">
+          Eliminate the bugs to unlock my technical skills
+        </p>
         <div className="border border-border rounded-md overflow-hidden shadow-lg" style={{ backgroundColor: '#000' }}>
           <canvas
             ref={canvasRef}
