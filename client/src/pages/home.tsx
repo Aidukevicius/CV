@@ -62,21 +62,21 @@ export default function Home() {
           </div>
           
           {/* Projects Section - Full Width Below */}
-          <div className="col-span-2 min-h-screen flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+          <div className="col-span-2 py-16 flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
             <ProjectsGrid />
           </div>
         </div>
 
-        {/* Mobile Layout - Single column, no robot */}
-        <div className="md:hidden min-h-screen overflow-y-auto">
+        {/* Mobile Layout - Single column, more compact */}
+        <div className="md:hidden overflow-y-auto">
           <div className="flex flex-col">
             {/* Personal Info Section */}
-            <div className="min-h-screen flex items-center sticky top-0 z-10" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="min-h-[80vh] flex items-center py-8" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <PersonalInfo />
             </div>
 
             {/* Game Section */}
-            <div className="min-h-screen flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="py-8 flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -92,7 +92,7 @@ export default function Home() {
             </div>
 
             {/* Projects Section */}
-            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="py-12 flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <ProjectsGrid />
             </div>
           </div>

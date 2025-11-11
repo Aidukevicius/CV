@@ -71,6 +71,8 @@ export default function BugShooterGame() {
   const shieldRef = useRef(0);
   const invulnerabilityRef = useRef(0);
   const scaleRef = useRef(1);
+  const touchTargetXRef = useRef<number | null>(null);
+  const isTouchDeviceRef = useRef(false);
 
   const resetGame = () => {
     setScore(0);
@@ -136,13 +138,58 @@ export default function BugShooterGame() {
       keysRef.current.delete(e.key.toLowerCase());
     };
 
-    const handleClick = () => {
+    const handleClick = (e: MouseEvent) => {
       if (gameOver) return;
       if (!gameStarted) {
         startGame();
-      } else if (!isPaused) {
+      } else if (!isPaused && !isTouchDeviceRef.current) {
         shoot();
       }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      isTouchDeviceRef.current = true;
+      
+      if (gameOver) return;
+      if (!gameStarted) {
+        startGame();
+        return;
+      }
+      if (isPaused) return;
+
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = (touch.clientX - rect.left) / scaleRef.current;
+      const y = (touch.clientY - rect.top) / scaleRef.current;
+
+      touchTargetXRef.current = x;
+      
+      if (y < 500) {
+        shoot();
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      if (!gameStarted || isPaused || gameOver) return;
+
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = (touch.clientX - rect.left) / scaleRef.current;
+
+      touchTargetXRef.current = x;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      touchTargetXRef.current = null;
     };
 
     const shoot = () => {
@@ -328,7 +375,8 @@ export default function BugShooterGame() {
         ctx.fillStyle = "#888888";
         ctx.fillText("Click or SPACE to start", 250, 290);
         ctx.fillText("A/D or ← → to move • Space/Click to shoot", 250, 310);
-        ctx.fillText("P to pause", 250, 330);
+        ctx.fillText("Touch to move & shoot on mobile", 250, 330);
+        ctx.fillText("P to pause", 250, 350);
         animationFrameRef.current = requestAnimationFrame(gameLoop);
         return;
       }
@@ -402,6 +450,18 @@ export default function BugShooterGame() {
       }
       if (keysRef.current.has("d") || keysRef.current.has("arrowright")) {
         playerXRef.current = Math.min(475, playerXRef.current + speed);
+      }
+
+      if (touchTargetXRef.current !== null) {
+        const diff = touchTargetXRef.current - playerXRef.current;
+        if (Math.abs(diff) > 5) {
+          const moveSpeed = Math.min(Math.abs(diff) * 0.15, speed);
+          if (diff > 0) {
+            playerXRef.current = Math.min(475, playerXRef.current + moveSpeed);
+          } else {
+            playerXRef.current = Math.max(25, playerXRef.current - moveSpeed);
+          }
+        }
       }
 
       bulletsRef.current.forEach((bullet, i) => {
@@ -596,6 +656,9 @@ export default function BugShooterGame() {
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     canvas.addEventListener("click", handleClick);
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchend", handleTouchEnd, { passive: false });
 
     gameLoop();
 
@@ -603,6 +666,9 @@ export default function BugShooterGame() {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
       canvas.removeEventListener("click", handleClick);
+      canvas.removeEventListener("touchstart", handleTouchStart);
+      canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchend", handleTouchEnd);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
