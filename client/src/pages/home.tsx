@@ -3,7 +3,6 @@ import { useState } from "react";
 import PersonalInfo from "@/components/PersonalInfo";
 import BugShooterGame from "@/components/BugShooterGame";
 import ProjectsGrid from "@/components/ProjectsGrid";
-import Robot from "@/components/Robot";
 import { Maximize2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -22,13 +21,10 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Center Column - Game + Robot */}
-          <div className="flex flex-col items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full h-[60vh] flex items-center justify-center">
+          {/* Center Column - Game */}
+          <div className="flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full flex items-center justify-center">
               <BugShooterGame />
-            </div>
-            <div className="w-full h-48 flex-shrink-0">
-              <Robot />
             </div>
           </div>
           
@@ -47,9 +43,9 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Right Column - Game + Robot */}
-          <div className="h-screen flex flex-col items-center justify-center" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full h-[55vh] flex items-center justify-center relative">
+          {/* Right Column - Game */}
+          <div className="h-screen flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full flex items-center justify-center">
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -62,9 +58,6 @@ export default function Home() {
                 </Button>
               </div>
               <BugShooterGame />
-            </div>
-            <div className="w-full h-40 flex-shrink-0">
-              <Robot />
             </div>
           </div>
           
@@ -104,11 +97,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Robot decoration at bottom center - Desktop only */}
-      <div className="hidden lg:block fixed bottom-0 left-1/2 -translate-x-1/2 w-80 h-80 pointer-events-none z-0" style={{ left: '50%' }}>
-        {/* This is now handled in the center column */}
       </div>
 
       {/* Fullscreen Game Modal */}
