@@ -1,13 +1,16 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import PersonalInfo from "@/components/PersonalInfo";
 import BugShooterGame from "@/components/BugShooterGame";
 import ProjectsGrid from "@/components/ProjectsGrid";
 import { Maximize2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Home() {
   const [gameFullscreen, setGameFullscreen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -89,22 +92,45 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent pointer-events-none" />
             </div>
 
-            {/* Game Section */}
+            {/* Game Section - Mobile with auto-fullscreen */}
             <div className="py-8 px-4 flex items-center justify-center relative border-b border-border/30" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-              <div className="absolute top-4 right-4 z-20">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => setGameFullscreen(true)}
-                  className="bg-background/80 backdrop-blur-sm"
-                  data-testid="button-fullscreen"
-                >
-                  <Maximize2 className="w-5 h-5" />
-                </Button>
+              <div className={gameFullscreen ? "fixed inset-0 z-50 bg-background flex items-center justify-center p-4" : "w-full"}>
+                {gameFullscreen && (
+                  <div className="absolute top-4 right-4 z-20">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => setGameFullscreen(false)}
+                      className="bg-background/80 backdrop-blur-sm"
+                      data-testid="button-close-fullscreen"
+                    >
+                      <X className="w-5 h-5" />
+                    </Button>
+                  </div>
+                )}
+                {!gameFullscreen && (
+                  <div className="absolute top-4 right-4 z-20">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => setGameFullscreen(true)}
+                      className="bg-background/80 backdrop-blur-sm"
+                      data-testid="button-fullscreen"
+                    >
+                      <Maximize2 className="w-5 h-5" />
+                    </Button>
+                  </div>
+                )}
+                <BugShooterGame 
+                  autoFullscreenOnMobile={isMobile && !gameFullscreen}
+                  onRequestFullscreen={() => setGameFullscreen(true)}
+                  isInFullscreen={gameFullscreen}
+                />
               </div>
-              <BugShooterGame />
               {/* Gradient divider */}
-              <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent pointer-events-none" />
+              {!gameFullscreen && (
+                <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent pointer-events-none" />
+              )}
             </div>
 
             {/* Projects Section */}
@@ -115,9 +141,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Fullscreen Game Modal */}
+      {/* Fullscreen Game Modal for Desktop/Tablet */}
       {gameFullscreen && (
-        <div className="fixed inset-0 z-50 bg-background flex flex-col">
+        <div className="hidden md:block fixed inset-0 z-50 bg-background flex-col">
           <div className="absolute top-4 right-4 z-20">
             <Button
               size="icon"
@@ -131,7 +157,7 @@ export default function Home() {
             </Button>
           </div>
           <div className="flex-1 flex items-center justify-center p-4">
-            <BugShooterGame />
+            <BugShooterGame isInFullscreen={true} />
           </div>
         </div>
       )}

@@ -44,7 +44,13 @@ const SKILLS = [
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 580;
 
-export default function BugShooterGame() {
+interface BugShooterGameProps {
+  onRequestFullscreen?: () => void;
+  autoFullscreenOnMobile?: boolean;
+  isInFullscreen?: boolean;
+}
+
+export default function BugShooterGame({ onRequestFullscreen, autoFullscreenOnMobile = false, isInFullscreen = false }: BugShooterGameProps = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [score, setScore] = useState(0);
@@ -73,6 +79,7 @@ export default function BugShooterGame() {
   const scaleRef = useRef(1);
   const touchTargetXRef = useRef<number | null>(null);
   const isTouchDeviceRef = useRef(false);
+  const hasRequestedFullscreenRef = useRef(false);
 
   const resetGame = () => {
     setScore(0);
@@ -101,6 +108,12 @@ export default function BugShooterGame() {
     setGameStarted(true);
     waveTimerRef.current = Date.now();
   };
+
+  useEffect(() => {
+    if (!isInFullscreen && hasRequestedFullscreenRef.current) {
+      hasRequestedFullscreenRef.current = false;
+    }
+  }, [isInFullscreen]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -140,6 +153,13 @@ export default function BugShooterGame() {
 
     const handleClick = (e: MouseEvent) => {
       if (gameOver) return;
+      
+      if (autoFullscreenOnMobile && !hasRequestedFullscreenRef.current && onRequestFullscreen) {
+        hasRequestedFullscreenRef.current = true;
+        onRequestFullscreen();
+        return;
+      }
+      
       if (!gameStarted) {
         startGame();
       } else if (!isPaused && !isTouchDeviceRef.current) {
@@ -152,6 +172,13 @@ export default function BugShooterGame() {
       isTouchDeviceRef.current = true;
       
       if (gameOver) return;
+      
+      if (autoFullscreenOnMobile && !hasRequestedFullscreenRef.current && onRequestFullscreen) {
+        hasRequestedFullscreenRef.current = true;
+        onRequestFullscreen();
+        return;
+      }
+      
       if (!gameStarted) {
         startGame();
         return;
