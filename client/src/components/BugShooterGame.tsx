@@ -538,7 +538,7 @@ export default function BugShooterGame() {
       });
 
       for (let i = 0; i < lives; i++) {
-        const x = 10 + i * 20;
+        const x = 20 + i * 20;
         const y = 16;
         const size = 8;
         
