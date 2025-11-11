@@ -147,7 +147,7 @@ function ProjectCard({ title, imageUrl, delay }: { title: string; imageUrl: stri
 
 export default function ProjectsGrid() {
   return (
-    <div className="w-full h-full flex items-center justify-center relative px-6 py-8" style={{ backgroundColor: 'transparent' }}>
+    <div className="w-full h-full flex items-center justify-center relative" style={{ backgroundColor: 'transparent' }}>
       <div className="flex flex-col relative z-10 w-full max-w-4xl items-center">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold mb-3" style={{ color: "hsl(0 0% 70%)" }}>

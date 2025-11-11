@@ -5,7 +5,7 @@ import LocationMap from "./LocationMap";
 
 export default function PersonalInfo() {
   return (
-    <div className="flex flex-col gap-6 p-6 lg:p-8 max-h-screen lg:max-h-none overflow-hidden max-w-md mx-auto w-full">
+    <div className="flex flex-col gap-6 max-h-screen lg:max-h-none overflow-hidden max-w-md mx-auto w-full">
       <div className="flex items-center justify-center">
         <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-accent border-2 border-border flex items-center justify-center hover-elevate transition-all">
           <User className="w-10 h-10 lg:w-12 lg:h-12 text-muted-foreground" />

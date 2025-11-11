@@ -13,39 +13,47 @@ export default function Home() {
     <>
       <div className="min-h-screen w-full bg-background relative overflow-hidden">
         {/* Desktop Layout - 3 equal columns */}
-        <div className="hidden lg:grid lg:grid-cols-3 lg:h-screen">
+        <div className="hidden lg:grid lg:grid-cols-3 lg:h-screen lg:gap-0">
           {/* Left Column - Personal Info */}
-          <div className="flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
-            <div className="w-full">
+          <div className="flex items-center relative border-r border-border/30" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="w-full px-8 py-12">
               <PersonalInfo />
             </div>
+            {/* Gradient divider */}
+            <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-border/50 to-transparent pointer-events-none" />
           </div>
           
           {/* Center Column - Game */}
-          <div className="flex items-start justify-center relative py-8" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full flex items-start justify-center">
+          <div className="flex items-start justify-center relative py-8 border-r border-border/30" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="w-full flex items-start justify-center px-6">
               <BugShooterGame />
             </div>
+            {/* Gradient divider */}
+            <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-border/50 to-transparent pointer-events-none" />
           </div>
           
           {/* Right Column - Projects */}
           <div className="flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
-            <ProjectsGrid />
+            <div className="w-full px-8 py-12">
+              <ProjectsGrid />
+            </div>
           </div>
         </div>
 
         {/* Tablet Layout - 2 columns + scroll */}
         <div className="hidden md:grid md:grid-cols-2 lg:hidden min-h-screen">
           {/* Left Column - Personal Info */}
-          <div className="h-screen flex items-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
-            <div className="w-full">
+          <div className="h-screen flex items-center relative border-r border-border/30" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="w-full px-8 py-12">
               <PersonalInfo />
             </div>
+            {/* Gradient divider */}
+            <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-border/50 to-transparent pointer-events-none" />
           </div>
           
           {/* Right Column - Game */}
           <div className="h-screen flex items-start justify-center relative py-8" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
-            <div className="w-full flex items-start justify-center">
+            <div className="w-full flex items-start justify-center px-6">
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -62,8 +70,12 @@ export default function Home() {
           </div>
           
           {/* Projects Section - Full Width Below */}
-          <div className="col-span-2 py-16 flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
-            <ProjectsGrid />
+          <div className="col-span-2 py-16 flex items-center justify-center border-t border-border/30 relative" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            {/* Gradient divider */}
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent pointer-events-none" />
+            <div className="w-full px-8">
+              <ProjectsGrid />
+            </div>
           </div>
         </div>
 
@@ -71,12 +83,14 @@ export default function Home() {
         <div className="md:hidden overflow-y-auto">
           <div className="flex flex-col">
             {/* Personal Info Section */}
-            <div className="min-h-[80vh] flex items-center py-8" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="min-h-[80vh] flex items-center py-8 px-6 relative border-b border-border/30" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <PersonalInfo />
+              {/* Gradient divider */}
+              <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent pointer-events-none" />
             </div>
 
             {/* Game Section */}
-            <div className="py-8 flex items-center justify-center relative" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
+            <div className="py-8 px-4 flex items-center justify-center relative border-b border-border/30" style={{ backgroundColor: "hsl(0 0% 3%)" }}>
               <div className="absolute top-4 right-4 z-20">
                 <Button
                   size="icon"
@@ -89,10 +103,12 @@ export default function Home() {
                 </Button>
               </div>
               <BugShooterGame />
+              {/* Gradient divider */}
+              <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent pointer-events-none" />
             </div>
 
             {/* Projects Section */}
-            <div className="py-12 flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
+            <div className="py-12 px-6 flex items-center justify-center" style={{ backgroundColor: "hsl(0 0% 5%)" }}>
               <ProjectsGrid />
             </div>
           </div>
